@@ -7,33 +7,61 @@
 <style>
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;background:#07070a;color:#f5f5f7;display:flex;justify-content:center}
 .app{width:min(980px,100%);min-height:100vh;display:flex;flex-direction:column;padding:24px}
-header{padding:18px 4px 20px;display:flex;align-items:center;gap:12px}
-.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#fff,#777);color:#08080a;display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 8px 30px #0008}
+header{padding:18px 4px 20px;display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#fff,#777);color:#08080a;display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 8px 30px #0008}
 h1{font-size:22px;margin:0}.sub{color:#8f8f99;font-size:13px;margin-top:3px}
+.status{margin-left:auto;color:#8f8f99;font-size:12px}.status.ready{color:#9cffb0}.status.loading{color:#ffd37a}
 .chat{flex:1;border:1px solid #ffffff16;border-radius:26px;background:#ffffff05;backdrop-filter:blur(20px);padding:20px;overflow:auto;min-height:55vh}
-.msg{max-width:78%;padding:13px 16px;border-radius:18px;margin:10px 0;line-height:1.5;white-space:pre-wrap}
-.user{margin-left:auto;background:#f2f2f2;color:#111}.assistant{background:#17171c;border:1px solid #ffffff10}
+.msg{max-width:78%;padding:13px 16px;border-radius:18px;margin:10px 0;line-height:1.5;white-space:pre-wrap}.user{margin-left:auto;background:#f2f2f2;color:#111}.assistant{background:#17171c;border:1px solid #ffffff10}
 .composer{display:flex;gap:10px;margin-top:14px}.composer input{flex:1;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:18px;padding:15px 17px;outline:none;font-size:15px}.composer button{border:0;border-radius:18px;padding:0 22px;background:#fff;color:#111;font-weight:700;cursor:pointer}.composer button:disabled{opacity:.5}
-@media(max-width:600px){.app{padding:12px}.msg{max-width:90%}.composer button{padding:0 16px}}
+.note{text-align:center;color:#666;font-size:11px;margin-top:9px}
+@media(max-width:600px){.app{padding:12px}.msg{max-width:90%}.composer button{padding:0 16px}.status{display:none}}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="logo">K</div><div><h1>Kilizix AI</h1><div class="sub">Ваш новый AI-помощник</div></div></header>
-<main class="chat" id="chat"><div class="msg assistant">Привет! Я Kilizix AI. Напишите мне сообщение.</div></main>
-<form class="composer" id="form"><input id="input" autocomplete="off" placeholder="Напишите сообщение..." /><button id="send">➤</button></form>
+<header><div class="logo">K</div><div><h1>Kilizix AI</h1><div class="sub">Локальный AI без платного API</div></div><div id="status" class="status">Загрузка модели…</div></header>
+<main class="chat" id="chat"><div class="msg assistant">Привет! Я Kilizix AI. Сейчас загружаю модель прямо в ваш браузер.</div></main>
+<form class="composer" id="form"><input id="input" autocomplete="off" placeholder="Напишите сообщение..." disabled /><button id="send" disabled>➤</button></form>
+<div class="note">Модель работает на устройстве пользователя. Интернет нужен только для первой загрузки модели.</div>
 </div>
-<script>
-const chat=document.getElementById('chat'),form=document.getElementById('form'),input=document.getElementById('input'),send=document.getElementById('send');
+<script type="module">
+import {CreateMLCEngine} from "https://esm.run/@mlc-ai/web-llm";
+
+const MODEL="Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
+const chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("input"),send=document.getElementById("send"),status=document.getElementById("status");
+let engine=null;
 const messages=[];
-function add(role,text){const d=document.createElement('div');d.className='msg '+role;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
-form.addEventListener('submit',async e=>{
- e.preventDefault(); const text=input.value.trim(); if(!text)return;
- messages.push({role:'user',content:text}); add('user',text); input.value=''; send.disabled=true;
- try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages})});const data=await r.json(); if(!r.ok)throw new Error(data.error||'Ошибка');
- messages.push({role:'assistant',content:data.reply}); add('assistant',data.reply);
- }catch(err){add('assistant','Ошибка: '+err.message)}finally{send.disabled=false;input.focus()}
+function add(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+function progress(p){status.textContent=p.text||"Загрузка модели…";status.className="status loading"}
+async function init(){
+ try{
+   engine=await CreateMLCEngine(MODEL,{initProgressCallback:progress});
+   status.textContent="● Готов";
+   status.className="status ready";
+   input.disabled=false;send.disabled=false;input.focus();
+   add("assistant","Готово. Я работаю локально на вашем устройстве — без OpenAI API и без оплаты за каждый запрос.");
+ }catch(e){
+   status.textContent="Ошибка";
+   add("assistant","Не удалось запустить локальную модель. Нужен современный браузер с поддержкой WebGPU. Попробуйте последнюю версию Chrome или Edge.\n\n"+e.message);
+ }
+}
+form.addEventListener("submit",async e=>{
+ e.preventDefault();const text=input.value.trim();if(!text||!engine)return;
+ messages.push({role:"user",content:text});add("user",text);input.value="";send.disabled=true;
+ try{
+   const res=await engine.chat.completions.create({
+     messages:[
+       {role:"system",content:"Ты Kilizix AI — дружелюбный и полезный ИИ-помощник. Отвечай на русском, если пользователь пишет по-русски."},
+       ...messages.slice(-12)
+     ],
+     temperature:0.7,max_tokens:512
+   });
+   const reply=res.choices?.[0]?.message?.content||"Не удалось получить ответ.";
+   messages.push({role:"assistant",content:reply});add("assistant",reply);
+ }catch(err){add("assistant","Ошибка: "+err.message)}
+ finally{send.disabled=false;input.focus()}
 });
+init();
 </script>
 </body>
 </html>
