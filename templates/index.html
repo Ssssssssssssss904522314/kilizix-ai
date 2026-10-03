@@ -5,62 +5,213 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kilizix AI</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;background:#07070a;color:#f5f5f7;display:flex;justify-content:center}
-.app{width:min(980px,100%);min-height:100vh;display:flex;flex-direction:column;padding:24px}
-header{padding:18px 4px 20px;display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#fff,#777);color:#08080a;display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 8px 30px #0008}
-h1{font-size:22px;margin:0}.sub{color:#8f8f99;font-size:13px;margin-top:3px}
-.status{margin-left:auto;color:#8f8f99;font-size:12px}.status.ready{color:#9cffb0}.status.loading{color:#ffd37a}
-.chat{flex:1;border:1px solid #ffffff16;border-radius:26px;background:#ffffff05;backdrop-filter:blur(20px);padding:20px;overflow:auto;min-height:55vh}
-.msg{max-width:78%;padding:13px 16px;border-radius:18px;margin:10px 0;line-height:1.5;white-space:pre-wrap}.user{margin-left:auto;background:#f2f2f2;color:#111}.assistant{background:#17171c;border:1px solid #ffffff10}
-.composer{display:flex;gap:10px;margin-top:14px}.composer input{flex:1;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:18px;padding:15px 17px;outline:none;font-size:15px}.composer button{border:0;border-radius:18px;padding:0 22px;background:#fff;color:#111;font-weight:700;cursor:pointer}.composer button:disabled{opacity:.5}
+*{box-sizing:border-box}
+:root{--bg:#07070a;--panel:#101015;--panel2:#15151b;--line:#ffffff12;--muted:#8f8f99;--accent:#fff}
+body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 20% 0,#191922 0,#07070a 38%);color:#f5f5f7}
+button,input{font:inherit}
+.layout{min-height:100vh;display:flex}
+.sidebar{width:270px;flex:none;background:#0b0b0fdd;border-right:1px solid var(--line);backdrop-filter:blur(25px);padding:16px;display:flex;flex-direction:column;gap:10px}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 5px 16px}
+.logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#fff,#777);color:#08080a;display:grid;place-items:center;font-weight:900;font-size:19px;box-shadow:0 8px 30px #0008}
+.brand h1{font-size:19px;margin:0}.brand div:last-child{color:var(--muted);font-size:12px;margin-top:2px}
+.sidebtn{width:100%;border:1px solid var(--line);background:#ffffff07;color:#f5f5f7;border-radius:14px;padding:12px 13px;text-align:left;cursor:pointer;transition:.2s}
+.sidebtn:hover{background:#ffffff0d;transform:translateY(-1px)}
+.sidebtn.primary{background:#fff;color:#111;border-color:#fff;font-weight:700}
+.sidebtn.premium{margin-top:auto;background:linear-gradient(135deg,#202027,#111116);border-color:#ffffff1c}
+.sidebtn.premium b{display:block}.sidebtn.premium span{font-size:11px;color:#a9a9b3}
+.chats-title{color:#666;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:12px 5px 3px}
+.chat-list{overflow:auto;display:flex;flex-direction:column;gap:5px;min-height:40px}
+.chat-item{border:0;background:transparent;color:#ddd;text-align:left;border-radius:10px;padding:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-item:hover,.chat-item.active{background:#ffffff0b}
+.main{width:min(980px,100%);min-height:100vh;display:flex;flex-direction:column;padding:18px 24px;margin:auto}
+header{padding:4px 4px 17px;display:flex;align-items:center;gap:12px}
+.header-logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#fff,#777);color:#08080a;display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 8px 30px #0008}
+h2{font-size:22px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:3px}
+.status{margin-left:auto;color:var(--muted);font-size:12px}.status.ready{color:#9cffb0}.status.loading{color:#ffd37a}.status.limit{color:#ff9c9c}
+.chat{flex:1;border:1px solid var(--line);border-radius:26px;background:#ffffff05;backdrop-filter:blur(20px);padding:20px;overflow:auto;min-height:55vh}
+.msg{max-width:78%;padding:13px 16px;border-radius:18px;margin:10px 0;line-height:1.5;white-space:pre-wrap}.user{margin-left:auto;background:#f2f2f2;color:#111}.assistant{background:#17171c;border:1px solid #ffffff10}.system{max-width:100%;text-align:center;background:#171217;border:1px solid #ffffff0c;color:#cfc4cf;font-size:13px}
+.composer{display:flex;gap:10px;margin-top:14px}.composer input{flex:1;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:18px;padding:15px 17px;outline:none;font-size:15px}.composer input:focus{border-color:#ffffff35}.composer button{border:0;border-radius:18px;padding:0 22px;background:#fff;color:#111;font-weight:700;cursor:pointer}.composer button:disabled{opacity:.5;cursor:not-allowed}
 .note{text-align:center;color:#666;font-size:11px;margin-top:9px}
-@media(max-width:600px){.app{padding:12px}.msg{max-width:90%}.composer button{padding:0 16px}.status{display:none}}
+.modal-bg{position:fixed;inset:0;background:#000a;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.modal{width:min(440px,100%);background:#15151b;border:1px solid #ffffff18;border-radius:24px;padding:24px;box-shadow:0 25px 80px #0009}
+.modal h3{margin:0 0 8px;font-size:21px}.modal p{color:#aaa;line-height:1.5;font-size:14px}.modal .price{font-size:28px;font-weight:800;margin:18px 0}
+.modal-actions{display:flex;gap:9px;flex-wrap:wrap}.modal-actions button{border:0;border-radius:14px;padding:12px 15px;cursor:pointer;font-weight:700}.buy{background:#fff;color:#111}.cancel{background:#ffffff0d;color:#fff}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#ffffff0c;color:#aaa;font-size:11px}
+@media(max-width:760px){.sidebar{width:220px}.main{padding:12px}.chat{min-height:58vh}}
+@media(max-width:620px){.sidebar{position:fixed;z-index:5;left:0;top:0;bottom:0;transform:translateX(-100%);transition:.25s;width:270px}.sidebar.open{transform:translateX(0)}.menu-toggle{display:block!important}.main{width:100%}.msg{max-width:90%}.status{display:none}}
+.menu-toggle{display:none;border:1px solid var(--line);background:#ffffff08;color:#fff;border-radius:12px;padding:8px 11px;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="app">
-<header><div class="logo">K</div><div><h1>Kilizix AI</h1><div class="sub">Локальный AI без платного API</div></div><div id="status" class="status">Загрузка модели…</div></header>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="logo">K</div><div><b>Kilizix AI</b><div>Ваш AI-помощник</div></div></div>
+  <button class="sidebtn primary" id="newChat">＋ Новый чат</button>
+  <div class="chats-title">Твои чаты</div>
+  <div class="chat-list" id="chatList"></div>
+  <button class="sidebtn premium" id="premiumBtn"><b>✦ Kilizix.AI Premium</b><span>150 ₽ в год · без лимита</span></button>
+  <button class="sidebtn" id="trialBtn">🎁 3 дня без лимита</button>
+</aside>
+
+<main class="main">
+<header>
+  <button class="menu-toggle" id="menuToggle">☰</button>
+  <div class="header-logo">K</div>
+  <div><h2>Kilizix AI</h2><div class="sub">Локальный AI без платного API</div></div>
+  <div id="status" class="status">Загрузка модели…</div>
+</header>
 <main class="chat" id="chat"><div class="msg assistant">Привет! Я Kilizix AI. Сейчас загружаю модель прямо в ваш браузер.</div></main>
-<form class="composer" id="form"><input id="input" autocomplete="off" placeholder="Напишите сообщение..." disabled /><button id="send" disabled>➤</button></form>
-<div class="note">Модель работает на устройстве пользователя. Интернет нужен только для первой загрузки модели.</div>
+<form class="composer" id="form"><input id="input" autocomplete="off" placeholder="Напишите сообщение..." disabled><button id="send" disabled>➤</button></form>
+<div class="note" id="note">Модель работает на устройстве пользователя. Интернет нужен только для первой загрузки модели.</div>
+</main>
 </div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3 id="modalTitle">Kilizix.AI Premium</h3>
+    <p id="modalText"></p>
+    <div class="price" id="modalPrice"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
 <script type="module">
 import {CreateMLCEngine} from "https://esm.run/@mlc-ai/web-llm";
 
 const MODEL="Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
-const chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("input"),send=document.getElementById("send"),status=document.getElementById("status");
-let engine=null;
-const messages=[];
-function add(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
-function progress(p){status.textContent=p.text||"Загрузка модели…";status.className="status loading"}
-async function init(){
- try{
-   engine=await CreateMLCEngine(MODEL,{initProgressCallback:progress});
-   status.textContent="● Готов";
-   status.className="status ready";
-   input.disabled=false;send.disabled=false;input.focus();
-   add("assistant","Готово. Я работаю локально на вашем устройстве — без OpenAI API и без оплаты за каждый запрос.");
- }catch(e){
-   status.textContent="Ошибка";
-   add("assistant","Не удалось запустить локальную модель. Нужен современный браузер с поддержкой WebGPU. Попробуйте последнюю версию Chrome или Edge.\n\n"+e.message);
- }
+const DAILY_LIMIT=15;
+const PREMIUM_PRICE=150;
+const TRIAL_DAYS=3;
+// После выбора канала заменим это значение на настоящий адрес.
+const TELEGRAM_CHANNEL_URL="https://t.me/";
+const chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("input"),send=document.getElementById("send"),status=document.getElementById("status"),note=document.getElementById("note");
+const chatList=document.getElementById("chatList"),modalBg=document.getElementById("modalBg"),modalTitle=document.getElementById("modalTitle"),modalText=document.getElementById("modalText"),modalPrice=document.getElementById("modalPrice"),modalActions=document.getElementById("modalActions");
+let engine=null, currentChatId=Date.now(), messages=[];
+
+const keyPrefix="kilizix_";
+function loadChats(){try{return JSON.parse(localStorage.getItem(keyPrefix+"chats")||"[]")}catch{return[]}}
+function saveChats(chats){localStorage.setItem(keyPrefix+"chats",JSON.stringify(chats.slice(-30)))}
+function saveCurrentChat(){
+  if(!messages.length)return;
+  const chats=loadChats(); const title=messages.find(x=>x.role==="user")?.content?.slice(0,38)||"Новый чат";
+  const item={id:currentChatId,title,messages};
+  const i=chats.findIndex(x=>x.id===currentChatId); if(i>=0)chats[i]=item;else chats.push(item);
+  saveChats(chats);renderChatList();
 }
+function renderChatList(){
+  chatList.innerHTML="";
+  loadChats().reverse().forEach(c=>{const b=document.createElement("button");b.className="chat-item"+(c.id===currentChatId?" active":"");b.textContent=c.title;b.onclick=()=>openChat(c.id);chatList.appendChild(b)});
+}
+function openChat(id){
+  const c=loadChats().find(x=>x.id===id); if(!c)return;
+  currentChatId=c.id;messages=c.messages||[];chat.innerHTML="";
+  if(!messages.length)add("assistant","Новый чат. Чем могу помочь?");
+  else messages.forEach(m=>add(m.role==="user"?"user":"assistant",m.content));
+  renderChatList(); document.getElementById("sidebar").classList.remove("open");
+}
+function newChat(){
+  saveCurrentChat();currentChatId=Date.now();messages=[];chat.innerHTML="";
+  add("assistant","Новый чат создан. Чем могу помочь?");renderChatList();
+  input.focus();document.getElementById("sidebar").classList.remove("open");
+}
+function add(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+function showModal(title,text,price,actions){modalTitle.textContent=title;modalText.innerHTML=text;modalPrice.textContent=price||"";modalActions.innerHTML="";actions.forEach(a=>{const b=document.createElement("button");b.textContent=a.label;b.className=a.cls||"cancel";b.onclick=a.onClick;modalActions.appendChild(b)});modalBg.style.display="flex"}
+function closeModal(){modalBg.style.display="none"}
+modalBg.addEventListener("click",e=>{if(e.target===modalBg)closeModal()});
+
+function nowMinutes(){const d=new Date();return d.getHours()*60+d.getMinutes()}
+function limitWindow(){
+  const m=nowMinutes();
+  if(m>=0&&m<440)return {available:false,until:"07:20"};
+  if(m>=440&&m<780)return {available:true,until:"13:00"};
+  if(m>=780&&m<950)return {available:false,until:"15:50"};
+  return {available:true,until:"00:00"};
+}
+function dateKey(){const d=new Date();return d.toLocaleDateString("sv-SE")}
+function usage(){
+  const w=limitWindow(), k=keyPrefix+"usage_"+dateKey(), raw=JSON.parse(localStorage.getItem(k)||"{}");
+  if(raw.date!==dateKey())return {first:0,second:0};
+  return {first:Number(raw.first)||0,second:Number(raw.second)||0};
+}
+function isPremium(){const until=Number(localStorage.getItem(keyPrefix+"premiumUntil")||0);return until>Date.now()}
+function isTrial(){const until=Number(localStorage.getItem(keyPrefix+"trialUntil")||0);return until>Date.now()}
+function countUsed(){
+  const u=usage(); return nowMinutes()<780?u.first:u.second;
+}
+function consume(){
+  const w=limitWindow(); if(!w.available||isPremium()||isTrial())return true;
+  const k=keyPrefix+"usage_"+dateKey(),u=usage();
+  if(nowMinutes()<780)u.first++;else u.second++;
+  localStorage.setItem(k,JSON.stringify({date:dateKey(),...u}));return true;
+}
+function canSend(){
+  const w=limitWindow();
+  if(isPremium()||isTrial())return true;
+  if(!w.available){showLimitMessage(w.until);return false}
+  if(countUsed()>=DAILY_LIMIT){showLimitMessage(w.until);return false}
+  if(countUsed()===DAILY_LIMIT-1){
+    add("system","⚠️ Это ваш последний запрос в текущем окне. После него лимит обновится в "+w.until+". Premium снимает лимит.");
+  }
+  return true;
+}
+function showLimitMessage(until){
+  status.textContent="Лимит";
+  status.className="status limit";
+  add("system","⏳ Лимит бесплатных запросов достигнут. Следующее окно откроется в "+until+".\n\nKilizix.AI Premium за 150 ₽ в год снимает лимит. Также можно получить 3 дня без лимита за подписку на Telegram-канал.");
+  input.disabled=true;send.disabled=true;
+}
+function updateStatus(){
+  if(isPremium()){status.textContent="✦ Premium";status.className="status ready";note.textContent="Kilizix.AI Premium активен — лимита запросов нет.";return}
+  if(isTrial()){status.textContent="🎁 3 дня";status.className="status ready";note.textContent="Пробный доступ активен — лимита запросов нет.";return}
+  const w=limitWindow();
+  if(!w.available){status.textContent="Перерыв до "+w.until;status.className="status limit";note.textContent="Бесплатные запросы будут доступны в "+w.until+". Premium работает без перерывов."}
+  else{status.textContent="● Готов · "+countUsed()+"/"+DAILY_LIMIT;status.className="status ready";note.textContent="15 запросов в текущем окне. Premium за 150 ₽/год снимает лимит."}
+}
+function openPremium(){
+  showModal("Kilizix.AI Premium","Безлимитные запросы на весь срок подписки. Оплата — один раз в год.",PREMIUM_PRICE+" ₽ / год",[
+    {label:"Оплатить 150 ₽",cls:"buy",onClick:()=>{showModal("Оплата Premium","Платёжная система пока не подключена. Когда дадите реквизиты/платёжный сервис, эта кнопка будет вести на реальную оплату.",PREMIUM_PRICE+" ₽",[{label:"Закрыть",onClick:closeModal}])}},
+    {label:"Закрыть",onClick:closeModal}
+  ]);
+}
+function openTrial(){
+  showModal("3 дня без лимита","Подпишитесь на наш Telegram-канал, после чего система должна автоматически проверить подписку через Telegram-бота.", "",[
+    {label:"Открыть Telegram",cls:"buy",onClick:()=>window.open(TELEGRAM_CHANNEL_URL,"_blank")},
+    {label:"Проверить подписку",cls:"cancel",onClick:()=>{showModal("Проверка подписки","Автоматическая проверка будет подключена после указания канала и Telegram-бота.", "",[{label:"Закрыть",onClick:closeModal}])}},
+    {label:"Закрыть",onClick:closeModal}
+  ]);
+}
+
+document.getElementById("newChat").onclick=newChat;
+document.getElementById("premiumBtn").onclick=openPremium;
+document.getElementById("trialBtn").onclick=openTrial;
+document.getElementById("menuToggle").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
+
 form.addEventListener("submit",async e=>{
- e.preventDefault();const text=input.value.trim();if(!text||!engine)return;
- messages.push({role:"user",content:text});add("user",text);input.value="";send.disabled=true;
+ e.preventDefault();const text=input.value.trim();if(!text||!engine||!canSend())return;
+ consume();messages.push({role:"user",content:text});add("user",text);input.value="";send.disabled=true;updateStatus();
  try{
    const res=await engine.chat.completions.create({
-     messages:[
-       {role:"system",content:"Ты Kilizix AI — дружелюбный и полезный ИИ-помощник. Отвечай на русском, если пользователь пишет по-русски."},
-       ...messages.slice(-12)
-     ],
+     messages:[{role:"system",content:"Ты Kilizix AI — дружелюбный и полезный ИИ-помощник. Отвечай на русском, если пользователь пишет по-русски."},...messages.slice(-12)],
      temperature:0.7,max_tokens:512
    });
    const reply=res.choices?.[0]?.message?.content||"Не удалось получить ответ.";
-   messages.push({role:"assistant",content:reply});add("assistant",reply);
+   messages.push({role:"assistant",content:reply});add("assistant",reply);saveCurrentChat();
  }catch(err){add("assistant","Ошибка: "+err.message)}
- finally{send.disabled=false;input.focus()}
+ finally{send.disabled=false;input.focus();updateStatus()}
 });
+
+renderChatList();
+updateStatus();
+async function init(){
+ try{
+   engine=await CreateMLCEngine(MODEL,{initProgressCallback:p=>{status.textContent=p.text||"Загрузка модели…";status.className="status loading"}});
+   updateStatus();input.disabled=false;send.disabled=false;input.focus();
+   add("assistant","Готово. Я работаю локально на вашем устройстве — без OpenAI API.");
+ }catch(e){
+   status.textContent="Ошибка";status.className="status limit";
+   add("assistant","Не удалось запустить локальную модель. Нужен современный браузер с поддержкой WebGPU. Попробуйте последнюю версию Chrome или Edge.\n\n"+e.message);
+ }
+}
 init();
 </script>
 </body>
