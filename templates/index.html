@@ -220,12 +220,32 @@ const PLUGINS=[
 {id:"translator",icon:"🌐",name:"Переводчик",desc:"Переводит тексты и сохраняет смысл и стиль.",instruction:"Если пользователь просит перевод, переводи естественно, сохраняя смысл, форматирование и тон.",tool:"none"},
 {id:"developer",icon:"💻",name:"Developer",desc:"Усиленный режим для программирования и отладки.",instruction:"Для программирования анализируй задачу как senior developer: предлагай рабочий код, учитывай ошибки, безопасность и структуру проекта.",tool:"none"},
 {id:"research",icon:"🔎",name:"Research",desc:"Режим глубокого анализа информации и источников.",instruction:"Разделяй факты, предположения и неизвестное. Для исследовательских ответов предлагай источники и проверяемые шаги.",tool:"none"},
-{id:"files",icon:"📁",name:"Файлы",desc:"Работа с файлами проекта, структурами и содержимым.",instruction:"При работе с проектом думай в терминах файлов, путей, зависимостей и структуры проекта. Предлагай полный набор нужных файлов.",tool:"none"}
+{id:"files",icon:"📁",name:"Файлы",desc:"Работа с файлами проекта, структурами и содержимым.",instruction:"При работе с проектом думай в терминах файлов, путей, зависимостей и структуры проекта. Предлагай полный набор нужных файлов.",tool:"none"},
+{id:"github",icon:"🐙",name:"GitHub",desc:"Подключает GitHub к Kilizix: репозитории, файлы, чтение и запись изменений.",instruction:"Если подключён GitHub, используй данные репозиториев и файлов только через GitHub-инструменты. Перед изменением файлов явно сообщай, что собираешься изменить, и не запрашивай секретные токены в чате.",tool:"github"}
 ];
 function installedPlugins(){try{return JSON.parse(localStorage.getItem("kilizix_plugins")||"[]")}catch{return[]}}
 function savePlugins(x){localStorage.setItem("kilizix_plugins",JSON.stringify(x))}
 function pluginEnabled(id){return installedPlugins().includes(id)}
+async function githubStatus(){try{return await (await fetch("/api/github/status")).json()}catch{return {connected:false}}}
+async function renderGithubControls(card){
+  const s=await githubStatus();
+  const meta=card.querySelector(".plugin-meta");
+  const install=card.querySelector(".plugin-install");
+  if(!pluginEnabled("github")) return;
+  if(s.connected){
+    meta.textContent="● GitHub подключён · @"+s.login;
+    install.textContent="Открыть репозитории";
+    install.className="plugin-install";
+    install.onclick=async()=>{const r=await fetch("/api/github/repos");const j=await r.json();if(!r.ok){alert(j.error||"Ошибка GitHub");return}const names=j.repos.map(x=>(x.private?"🔒 ":"")+" "+x.full_name).join("\n");alert("Ваши репозитории:\n\n"+(names||"Нет репозиториев"));};
+    const disconnect=document.createElement("button");disconnect.className="plugin-install off";disconnect.textContent="Отключить GitHub";disconnect.onclick=async()=>{await fetch("/api/github/logout",{method:"POST"});renderPlugins()};card.appendChild(disconnect);
+  }else{
+    install.textContent="Подключить GitHub";
+    install.onclick=()=>{location.href="/api/github/login"};
+  }
+}
 function renderPlugins(){const grid=document.getElementById("pluginGrid");grid.innerHTML="";PLUGINS.forEach(p=>{const card=document.createElement("div");card.className="plugin-card";const on=pluginEnabled(p.id);card.innerHTML=`<div class="plugin-icon">${p.icon}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="plugin-meta">${on?"● Подключён":"○ Не установлен"}</div><button class="plugin-install ${on?"off":""}">${on?"Отключить":"Установить"}</button>`;card.querySelector("button").onclick=()=>{let x=installedPlugins();if(on)x=x.filter(v=>v!==p.id);else x.push(p.id);savePlugins(x);renderPlugins();updatePluginChips()};grid.appendChild(card)})}
+const _renderPluginsBase=renderPlugins;
+renderPlugins=()=>{_renderPluginsBase();const card=[...document.querySelectorAll(".plugin-card")].find(x=>x.querySelector("h3")?.textContent==="GitHub");if(card)renderGithubControls(card)};
 function updatePluginChips(){let box=document.querySelector(".active-plugins");if(!box){box=document.createElement("div");box.className="active-plugins";form.parentNode.insertBefore(box,form)}box.innerHTML="";PLUGINS.filter(p=>pluginEnabled(p.id)).forEach(p=>{const c=document.createElement("span");c.className="plugin-chip";c.textContent=p.icon+" "+p.name;box.appendChild(c)})}
 function openPlugins(){document.querySelector(".chat").classList.add("hidden");form.classList.add("hidden");note.classList.add("hidden");codex.classList.add("hidden");plugins.classList.remove("hidden");renderPlugins();document.getElementById("sidebar").classList.remove("open")}
 function closePlugins(){plugins.classList.add("hidden");document.querySelector(".chat").classList.remove("hidden");form.classList.remove("hidden");note.classList.remove("hidden")}
