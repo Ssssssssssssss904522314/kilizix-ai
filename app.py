@@ -9,9 +9,8 @@ GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID", "")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET", "")
 GITHUB_REDIRECT_URI = os.getenv("GITHUB_REDIRECT_URI", "")
 
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
-GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "")
+TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "")
+TURNSTILE_SECRET = os.getenv("TURNSTILE_SECRET", "")
 
 github_tokens = {}
 
@@ -42,76 +41,37 @@ def home():
 
 @app.get("/api/auth/status")
 def auth_status():
-    user = session.get("google_user")
-    return jsonify({"authenticated": bool(user), "user": user})
+    return jsonify({"authenticated": bool(session.get("turnstile_verified"))})
 
-@app.get("/api/auth/google")
-def google_login():
-    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET or not GOOGLE_REDIRECT_URI:
-        return jsonify({"error": "Google OAuth ещё не настроен в Render."}), 503
-    state = secrets.token_urlsafe(32)
-    session["google_oauth_state"] = state
-    params = {
-        "client_id": GOOGLE_CLIENT_ID,
-        "redirect_uri": GOOGLE_REDIRECT_URI,
-        "response_type": "code",
-        "scope": "openid email profile",
-        "state": state,
-        "access_type": "online",
-        "prompt": "select_account",
-    }
-    from urllib.parse import urlencode
-    return redirect("https://accounts.google.com/o/oauth2/v2/auth?" + urlencode(params))
+@app.get("/api/turnstile/config")
+def turnstile_config():
+    return jsonify({"sitekey": TURNSTILE_SITE_KEY})
 
-@app.get("/api/auth/google/callback")
-def google_callback():
-    expected = session.pop("google_oauth_state", None)
-    if not expected or request.args.get("state") != expected:
-        return "Недействительный OAuth state.", 400
-    if request.args.get("error"):
-        return redirect("/?auth_error=" + request.args.get("error"))
-    code = request.args.get("code")
-    if not code:
-        return "Google не вернул код авторизации.", 400
-
-    token_resp = requests.post(
-        "https://oauth2.googleapis.com/token",
-        data={
-            "code": code,
-            "client_id": GOOGLE_CLIENT_ID,
-            "client_secret": GOOGLE_CLIENT_SECRET,
-            "redirect_uri": GOOGLE_REDIRECT_URI,
-            "grant_type": "authorization_code",
-        },
-        timeout=20,
-    )
-    if not token_resp.ok:
-        return "Не удалось завершить вход через Google.", 400
-    token_data = token_resp.json()
-    access_token = token_data.get("access_token")
-    if not access_token:
-        return "Google не вернул access token.", 400
-
-    user_resp = requests.get(
-        "https://openidconnect.googleapis.com/v1/userinfo",
-        headers={"Authorization": f"Bearer {access_token}"},
-        timeout=20,
-    )
-    if not user_resp.ok:
-        return "Не удалось получить профиль Google.", 400
-    profile = user_resp.json()
-
-    session["google_user"] = {
-        "id": profile.get("sub"),
-        "name": profile.get("name") or profile.get("email") or "Google user",
-        "email": profile.get("email"),
-        "picture": profile.get("picture"),
-    }
-    return redirect("/?login=google")
+@app.post("/api/turnstile/verify")
+def turnstile_verify():
+    body = request.get_json(silent=True) or {}
+    token = body.get("token")
+    if not TURNSTILE_SECRET:
+        return jsonify({"error": "Turnstile SECRET не настроен в Render."}), 503
+    if not token:
+        return jsonify({"error": "CAPTCHA token отсутствует."}), 400
+    try:
+        r = requests.post(
+            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+            data={"secret": TURNSTILE_SECRET, "response": token},
+            timeout=10,
+        )
+        data = r.json()
+    except Exception:
+        return jsonify({"error": "Не удалось проверить CAPTCHA."}), 502
+    if not data.get("success"):
+        return jsonify({"error": "CAPTCHA не пройдена.", "codes": data.get("error-codes", [])}), 403
+    session["turnstile_verified"] = True
+    return jsonify({"ok": True})
 
 @app.post("/api/auth/logout")
 def auth_logout():
-    session.pop("google_user", None)
+    session.pop("turnstile_verified", None)
     return jsonify({"ok": True})
 
 @app.get("/api/github/login")
