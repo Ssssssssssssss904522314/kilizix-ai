@@ -8,6 +8,11 @@ app.secret_key = os.getenv("KILIZIX_SECRET_KEY", secrets.token_hex(32))
 GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID", "")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET", "")
 GITHUB_REDIRECT_URI = os.getenv("GITHUB_REDIRECT_URI", "")
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "")
+
 github_tokens = {}
 
 def github_token():
@@ -34,6 +39,80 @@ def gh(method, path, **kwargs):
 @app.get("/")
 def home():
     return render_template("index.html")
+
+@app.get("/api/auth/status")
+def auth_status():
+    user = session.get("google_user")
+    return jsonify({"authenticated": bool(user), "user": user})
+
+@app.get("/api/auth/google")
+def google_login():
+    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET or not GOOGLE_REDIRECT_URI:
+        return jsonify({"error": "Google OAuth ещё не настроен в Render."}), 503
+    state = secrets.token_urlsafe(32)
+    session["google_oauth_state"] = state
+    params = {
+        "client_id": GOOGLE_CLIENT_ID,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "state": state,
+        "access_type": "online",
+        "prompt": "select_account",
+    }
+    from urllib.parse import urlencode
+    return redirect("https://accounts.google.com/o/oauth2/v2/auth?" + urlencode(params))
+
+@app.get("/api/auth/google/callback")
+def google_callback():
+    expected = session.pop("google_oauth_state", None)
+    if not expected or request.args.get("state") != expected:
+        return "Недействительный OAuth state.", 400
+    if request.args.get("error"):
+        return redirect("/?auth_error=" + request.args.get("error"))
+    code = request.args.get("code")
+    if not code:
+        return "Google не вернул код авторизации.", 400
+
+    token_resp = requests.post(
+        "https://oauth2.googleapis.com/token",
+        data={
+            "code": code,
+            "client_id": GOOGLE_CLIENT_ID,
+            "client_secret": GOOGLE_CLIENT_SECRET,
+            "redirect_uri": GOOGLE_REDIRECT_URI,
+            "grant_type": "authorization_code",
+        },
+        timeout=20,
+    )
+    if not token_resp.ok:
+        return "Не удалось завершить вход через Google.", 400
+    token_data = token_resp.json()
+    access_token = token_data.get("access_token")
+    if not access_token:
+        return "Google не вернул access token.", 400
+
+    user_resp = requests.get(
+        "https://openidconnect.googleapis.com/v1/userinfo",
+        headers={"Authorization": f"Bearer {access_token}"},
+        timeout=20,
+    )
+    if not user_resp.ok:
+        return "Не удалось получить профиль Google.", 400
+    profile = user_resp.json()
+
+    session["google_user"] = {
+        "id": profile.get("sub"),
+        "name": profile.get("name") or profile.get("email") or "Google user",
+        "email": profile.get("email"),
+        "picture": profile.get("picture"),
+    }
+    return redirect("/?login=google")
+
+@app.post("/api/auth/logout")
+def auth_logout():
+    session.pop("google_user", None)
+    return jsonify({"ok": True})
 
 @app.get("/api/github/login")
 def github_login():
