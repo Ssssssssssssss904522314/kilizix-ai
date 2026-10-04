@@ -234,9 +234,35 @@ async function renderGithubControls(card){
   if(!pluginEnabled("github")) return;
   if(s.connected){
     meta.textContent="● GitHub подключён · @"+s.login;
-    install.textContent="Открыть репозитории";
+    install.textContent="Работать с GitHub";
     install.className="plugin-install";
-    install.onclick=async()=>{const r=await fetch("/api/github/repos");const j=await r.json();if(!r.ok){alert(j.error||"Ошибка GitHub");return}const names=j.repos.map(x=>(x.private?"🔒 ":"")+" "+x.full_name).join("\n");alert("Ваши репозитории:\n\n"+(names||"Нет репозиториев"));};
+    const box=document.createElement("div");
+    box.style.cssText="display:flex;flex-direction:column;gap:7px;margin-top:4px";
+    box.innerHTML=`<select class="gh-repo" style="background:#0d0d12;color:#fff;border:1px solid #ffffff18;border-radius:10px;padding:9px"></select>
+      <input class="gh-path" placeholder="Путь к файлу, например public/index.html" style="background:#0d0d12;color:#fff;border:1px solid #ffffff18;border-radius:10px;padding:9px">
+      <button class="plugin-install gh-load">📖 Открыть файл</button>
+      <textarea class="gh-content" placeholder="Содержимое файла" style="display:none;width:100%;min-height:180px;resize:vertical;background:#09090d;color:#ddd;border:1px solid #ffffff10;border-radius:12px;padding:10px;font:12px/1.5 ui-monospace,monospace"></textarea>
+      <button class="plugin-install gh-save" style="display:none">💾 Сохранить в GitHub</button>`;
+    card.appendChild(box);
+    const select=box.querySelector(".gh-repo"), path=box.querySelector(".gh-path"), content=box.querySelector(".gh-content"), save=box.querySelector(".gh-save");
+    const rr=await fetch("/api/github/repos"); const jj=await rr.json();
+    if(rr.ok) jj.repos.forEach(x=>{const o=document.createElement("option");o.value=x.full_name;o.textContent=(x.private?"🔒 ":"")+x.full_name;select.appendChild(o)});
+    let fileSha="";
+    box.querySelector(".gh-load").onclick=async()=>{
+      const [owner,rname]=select.value.split("/");
+      if(!owner||!rname||!path.value.trim()){alert("Выберите репозиторий и укажите путь к файлу.");return}
+      const r=await fetch("/api/github/file?owner="+encodeURIComponent(owner)+"&repo="+encodeURIComponent(rname)+"&path="+encodeURIComponent(path.value.trim()));
+      const j=await r.json(); if(!r.ok){alert(j.error||"Не удалось открыть файл");return}
+      content.style.display="block";save.style.display="block";content.value=j.content;fileSha=j.sha;
+    };
+    save.onclick=async()=>{
+      const [owner,rname]=select.value.split("/");
+      if(!confirm("Сохранить изменения в GitHub? Это создаст commit в выбранном репозитории."))return;
+      const r=await fetch("/api/github/file",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({owner,repo:rname,path:path.value.trim(),content:content.value,sha:fileSha,message:"Update from Kilizix AI"})});
+      const j=await r.json(); if(!r.ok){alert(j.error||"Не удалось сохранить");return}
+      fileSha=j.content_sha||fileSha; alert("Готово. Изменения сохранены в GitHub.");
+    };
+    install.onclick=()=>box.scrollIntoView({behavior:"smooth",block:"center"});
     const disconnect=document.createElement("button");disconnect.className="plugin-install off";disconnect.textContent="Отключить GitHub";disconnect.onclick=async()=>{await fetch("/api/github/logout",{method:"POST"});renderPlugins()};card.appendChild(disconnect);
   }else{
     install.textContent="Подключить GitHub";
