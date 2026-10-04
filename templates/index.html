@@ -1,313 +1,41 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="paydex-verification" content="98e7e189968ea4c484a2e9f8fa62a02c">
-<title>Kilizix AI</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kilizix AI</title>
 <style>
-*{box-sizing:border-box}
-:root{--bg:#07070a;--panel:#101015;--panel2:#15151b;--line:#ffffff12;--muted:#8f8f99;--accent:#fff}
-body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 20% 0,#191922 0,#07070a 38%);color:#f5f5f7}
-button,input{font:inherit}
-.layout{min-height:100vh;display:flex}
-.sidebar{width:270px;flex:none;background:#0b0b0fdd;border-right:1px solid var(--line);backdrop-filter:blur(25px);padding:16px;display:flex;flex-direction:column;gap:10px}
-.brand{display:flex;align-items:center;gap:11px;padding:6px 5px 16px}
-.logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#fff,#777);color:#08080a;display:grid;place-items:center;font-weight:900;font-size:19px;box-shadow:0 8px 30px #0008}
-.brand h1{font-size:19px;margin:0}.brand div:last-child{color:var(--muted);font-size:12px;margin-top:2px}
-.sidebtn{width:100%;border:1px solid var(--line);background:#ffffff07;color:#f5f5f7;border-radius:14px;padding:12px 13px;text-align:left;cursor:pointer;transition:.2s}
-.sidebtn:hover{background:#ffffff0d;transform:translateY(-1px)}
-.sidebtn.primary{background:#fff;color:#111;border-color:#fff;font-weight:700}
-.sidebtn.premium{margin-top:auto;background:linear-gradient(135deg,#202027,#111116);border-color:#ffffff1c}
-.sidebtn.premium b{display:block}.sidebtn.premium span{font-size:11px;color:#a9a9b3}
-.chats-title{color:#666;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:12px 5px 3px}
-.chat-list{overflow:auto;display:flex;flex-direction:column;gap:5px;min-height:40px}
-.chat-item{border:0;background:transparent;color:#ddd;text-align:left;border-radius:10px;padding:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chat-item:hover,.chat-item.active{background:#ffffff0b}
-.main{width:min(980px,100%);min-height:100vh;display:flex;flex-direction:column;padding:18px 24px;margin:auto}
-header{padding:4px 4px 17px;display:flex;align-items:center;gap:12px}
-.header-logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#fff,#777);color:#08080a;display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 8px 30px #0008}
-h2{font-size:22px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:3px}
-.status{margin-left:auto;color:var(--muted);font-size:12px}.status.ready{color:#9cffb0}.status.loading{color:#ffd37a}.status.limit{color:#ff9c9c}
-.chat{flex:1;border:1px solid var(--line);border-radius:26px;background:#ffffff05;backdrop-filter:blur(20px);padding:20px;overflow:auto;min-height:55vh}
-.msg{max-width:78%;padding:13px 16px;border-radius:18px;margin:10px 0;line-height:1.5;white-space:pre-wrap}.user{margin-left:auto;background:#f2f2f2;color:#111}.assistant{background:#17171c;border:1px solid #ffffff10}.system{max-width:100%;text-align:center;background:#171217;border:1px solid #ffffff0c;color:#cfc4cf;font-size:13px}
-.composer{display:flex;gap:10px;margin-top:14px}.composer input{flex:1;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:18px;padding:15px 17px;outline:none;font-size:15px}.composer input:focus{border-color:#ffffff35}.composer button{border:0;border-radius:18px;padding:0 22px;background:#fff;color:#111;font-weight:700;cursor:pointer}.composer button:disabled{opacity:.5;cursor:not-allowed}
-.note{text-align:center;color:#666;font-size:11px;margin-top:9px}
-.modal-bg{position:fixed;inset:0;background:#000a;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
-.modal{width:min(440px,100%);background:#15151b;border:1px solid #ffffff18;border-radius:24px;padding:24px;box-shadow:0 25px 80px #0009}
-.modal h3{margin:0 0 8px;font-size:21px}.modal p{color:#aaa;line-height:1.5;font-size:14px}.modal .price{font-size:28px;font-weight:800;margin:18px 0}
-.modal-actions{display:flex;gap:9px;flex-wrap:wrap}.modal-actions button{border:0;border-radius:14px;padding:12px 15px;cursor:pointer;font-weight:700}.buy{background:#fff;color:#111}.cancel{background:#ffffff0d;color:#fff}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#ffffff0c;color:#aaa;font-size:11px}
-@media(max-width:760px){.sidebar{width:220px}.main{padding:12px}.chat{min-height:58vh}}
-@media(max-width:620px){.sidebar{position:fixed;z-index:5;left:0;top:0;bottom:0;transform:translateX(-100%);transition:.25s;width:270px}.sidebar.open{transform:translateX(0)}.menu-toggle{display:block!important}.main{width:100%}.msg{max-width:90%}.status{display:none}}
-.menu-toggle{display:none;border:1px solid var(--line);background:#ffffff08;color:#fff;border-radius:12px;padding:8px 11px;cursor:pointer}
-.codex{display:flex;flex-direction:column;gap:14px;min-height:70vh}.hidden{display:none!important}.codex-head{display:flex;align-items:center;justify-content:space-between;gap:14px}.codex-head h2{margin:8px 0 3px}.codex-prompt{width:100%;min-height:150px;resize:vertical;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:20px;padding:16px;outline:none;font:inherit;line-height:1.5}.codex-prompt:focus{border-color:#ffffff38}.codex-actions,.codex-bottom{display:flex;align-items:center;gap:10px}.codex-generate{border:0;border-radius:15px;padding:12px 17px;background:#fff;color:#111;font-weight:800;cursor:pointer}.codex-result{display:grid;grid-template-columns:230px 1fr;gap:10px;border:1px solid var(--line);border-radius:20px;background:#ffffff05;padding:10px}.codex-files,.codex-editor{min-width:0}.codex-title{font-size:12px;color:#999;padding:7px 8px;text-transform:uppercase;letter-spacing:.07em}#codexFileList{display:flex;flex-direction:column;gap:3px;max-height:410px;overflow:auto}.codex-file{border:0;background:transparent;color:#ddd;text-align:left;border-radius:9px;padding:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.codex-file:hover,.codex-file.active{background:#ffffff0d}#codexFileContent{width:100%;height:410px;resize:none;background:#09090d;color:#ddd;border:1px solid #ffffff10;border-radius:14px;padding:14px;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}.codex-bottom{grid-column:1/-1;justify-content:flex-end}@media(max-width:700px){.codex-result{grid-template-columns:1fr}.codex-files{order:2}.codex-editor{order:1}.codex-bottom{order:3}}.plugins{display:flex;flex-direction:column;gap:14px;min-height:70vh}.plugin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.plugin-card{border:1px solid #ffffff12;background:#ffffff06;border-radius:20px;padding:17px;display:flex;flex-direction:column;gap:9px}.plugin-icon{font-size:28px}.plugin-card h3{margin:0}.plugin-card p{margin:0;color:#999;font-size:13px;line-height:1.45}.plugin-meta{font-size:11px;color:#777}.plugin-install{border:0;border-radius:12px;padding:10px;background:#fff;color:#111;font-weight:800;cursor:pointer;margin-top:auto}.plugin-install.off{background:#ffffff0d;color:#fff;border:1px solid #ffffff12}.active-plugins{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.plugin-chip{font-size:11px;border:1px solid #ffffff12;background:#ffffff08;border-radius:999px;padding:5px 8px;color:#bbb}@media(max-width:700px){.plugin-grid{grid-template-columns:1fr}}</style>
-</head>
-<body>
-<div class="layout">
-<aside class="sidebar" id="sidebar">
-  <div class="brand"><div class="logo">K</div><div><b>Kilizix AI</b><div>Ваш AI-помощник</div></div></div>
-  <button class="sidebtn primary" id="newChat">＋ Новый чат</button>
-  <button class="sidebtn" id="codexBtn">⚡ Codex — создать проект</button>
-  <button class="sidebtn" id="pluginsBtn">🧩 Плагины</button>
-  <div class="chats-title">Твои чаты</div>
-  <div class="chat-list" id="chatList"></div>
-  <button class="sidebtn premium" id="premiumBtn"><b>✦ Kilizix.AI Premium</b><span>150 ₽ в год · без лимита</span></button>
-  <button class="sidebtn" id="trialBtn">🎁 3 дня без лимита</button>
-</aside>
-
-<main class="main">
-<header>
-  <button class="menu-toggle" id="menuToggle">☰</button>
-  <div class="header-logo">K</div>
-  <div><h2>Kilizix AI</h2><div class="sub">Локальный AI без платного API</div></div>
-  <div id="status" class="status">Загрузка модели…</div>
-</header>
-<section class="plugins hidden" id="plugins">
-<div class="codex-head"><div><span class="badge">Kilizix Plugins</span><h2>Плагины</h2><div class="sub">Подключай дополнительные возможности к Kilizix AI.</div></div><button class="sidebtn" id="pluginsBack">← Чат</button></div>
-<div class="plugin-grid" id="pluginGrid"></div>
-</section>
-<section class="codex hidden" id="codex">
-<div class="codex-head"><div><span class="badge">Kilizix Codex</span><h2>Создай что угодно</h2><div class="sub">Опиши результат обычными словами — Codex соберёт структуру проекта и файлы.</div></div><button class="sidebtn" id="codexBack">← Чат</button></div>
-<textarea id="codexPrompt" class="codex-prompt" placeholder="Например: создай современный сайт интернет-магазина с главной страницей, каталогом, корзиной и адаптивным дизайном..."></textarea>
-<div class="codex-actions"><button class="codex-generate" id="codexGenerate">⚡ Создать проект</button><span id="codexStatus" class="status">Готов</span></div>
-<div id="codexResult" class="codex-result hidden"><div class="codex-files"><div class="codex-title">Файлы проекта</div><div id="codexFileList"></div></div><div class="codex-editor"><div class="codex-title" id="codexFileTitle">Выберите файл</div><textarea id="codexFileContent" spellcheck="false"></textarea></div><div class="codex-bottom"><button class="codex-generate" id="codexDownload">⬇ Скачать ZIP</button><button class="sidebtn" id="codexPreview">▶ Предпросмотр</button></div></div>
-</section>
-<form class="composer" id="form"><input id="input" autocomplete="off" placeholder="Напишите сообщение..." disabled><button id="send" disabled>➤</button></form>
-<div class="note" id="note">Модель работает на устройстве пользователя. Интернет нужен только для первой загрузки модели.</div>
-</main>
-</div>
-
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <h3 id="modalTitle">Kilizix.AI Premium</h3>
-    <p id="modalText"></p>
-    <div class="price" id="modalPrice"></div>
-    <div class="modal-actions" id="modalActions"></div>
-  </div>
-</div>
-
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 20% 0,#191922,#07070a 42%);color:#f5f5f7}button,input,textarea,select{font:inherit}.layout{min-height:100vh;display:flex}.sidebar{width:270px;flex:none;background:#0b0b0fee;border-right:1px solid #ffffff12;padding:16px;display:flex;flex-direction:column;gap:9px}.brand{display:flex;gap:11px;align-items:center;padding:5px 4px 15px}.logo,.header-logo{display:grid;place-items:center;background:linear-gradient(135deg,#fff,#777);color:#08080a;font-weight:900}.logo{width:40px;height:40px;border-radius:13px}.brand b{font-size:18px}.muted,.sub{color:#8f8f99;font-size:12px}.sidebtn{width:100%;border:1px solid #ffffff12;background:#ffffff07;color:#fff;border-radius:13px;padding:11px 13px;text-align:left;cursor:pointer}.primary{background:#fff;color:#111;border-color:#fff;font-weight:800}.premium{margin-top:auto}.chats-title{color:#666;font-size:10px;text-transform:uppercase;padding:11px 5px 2px}.chat-list{overflow:auto;display:flex;flex-direction:column;gap:4px}.chat-item{border:0;background:transparent;color:#ddd;text-align:left;border-radius:9px;padding:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-item:hover,.chat-item.active{background:#ffffff0b}.main{width:min(1000px,100%);min-height:100vh;display:flex;flex-direction:column;padding:18px 24px;margin:auto}header{display:flex;align-items:center;gap:11px;padding:3px 3px 15px}.header-logo{width:43px;height:43px;border-radius:14px}.header-title h2{margin:0;font-size:21px}.status{margin-left:auto;font-size:12px;color:#999}.ready{color:#9cffb0}.loading{color:#ffd37a}.error{color:#ff9c9c}.account{display:flex;align-items:center;gap:7px;margin-left:12px}.account img{width:31px;height:31px;border-radius:50%;object-fit:cover}.account button{border:1px solid #ffffff12;background:#ffffff08;color:#fff;border-radius:10px;padding:7px 9px;cursor:pointer}.login{border:1px solid #ffffff18;background:#fff;color:#111;border-radius:11px;padding:9px 12px;font-weight:800;cursor:pointer;margin-left:10px}.chat{flex:1;border:1px solid #ffffff12;border-radius:25px;background:#ffffff05;backdrop-filter:blur(18px);padding:18px;overflow:auto;min-height:55vh}.msg{max-width:78%;padding:12px 15px;border-radius:17px;margin:9px 0;line-height:1.5;white-space:pre-wrap}.user{margin-left:auto;background:#f1f1f1;color:#111}.assistant{background:#17171c;border:1px solid #ffffff10}.system{max-width:100%;text-align:center;color:#bcb3bc;background:#171217;border:1px solid #ffffff0b;font-size:13px}.composer{display:flex;gap:9px;margin-top:12px}.composer input{flex:1;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:17px;padding:14px 16px;outline:0}.composer button{border:0;border-radius:17px;background:#fff;color:#111;padding:0 21px;font-weight:800;cursor:pointer}.composer button:disabled{opacity:.45}.note{text-align:center;color:#666;font-size:11px;margin-top:8px}.hidden{display:none!important}.page{display:flex;flex-direction:column;gap:13px;min-height:70vh}.page-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.page-head h2{margin:7px 0 2px}.badge{display:inline-block;background:#ffffff0b;border:1px solid #ffffff10;border-radius:999px;padding:4px 8px;color:#aaa;font-size:10px}.codex-prompt{width:100%;min-height:145px;background:#121217;color:#fff;border:1px solid #ffffff18;border-radius:19px;padding:15px;resize:vertical;outline:0}.action{border:0;border-radius:13px;padding:11px 15px;background:#fff;color:#111;font-weight:800;cursor:pointer}.result{border:1px solid #ffffff12;border-radius:19px;padding:10px;display:grid;grid-template-columns:220px 1fr;gap:10px}.files{display:flex;flex-direction:column;gap:3px;max-height:390px;overflow:auto}.file{border:0;background:transparent;color:#ddd;text-align:left;padding:8px;border-radius:8px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file.active,.file:hover{background:#ffffff0c}.editor textarea{width:100%;height:390px;background:#09090d;color:#ddd;border:1px solid #ffffff10;border-radius:13px;padding:12px;resize:none;font:12px/1.5 ui-monospace,monospace;outline:0}.bottom{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px}.plugin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:11px}.plugin{border:1px solid #ffffff12;background:#ffffff06;border-radius:18px;padding:15px;display:flex;flex-direction:column;gap:8px}.plugin h3{margin:0}.plugin p{margin:0;color:#999;font-size:13px;line-height:1.4}.plugin button{margin-top:auto}.ghbox{display:flex;flex-direction:column;gap:7px}.ghbox input,.ghbox select,.ghbox textarea{background:#0d0d12;color:#fff;border:1px solid #ffffff18;border-radius:9px;padding:8px}.ghbox textarea{min-height:150px;resize:vertical;font:12px/1.5 monospace}.menu{display:none;border:1px solid #ffffff12;background:#ffffff08;color:#fff;border-radius:10px;padding:7px 10px}@media(max-width:650px){.sidebar{position:fixed;z-index:20;top:0;bottom:0;left:0;transform:translateX(-100%);transition:.2s}.sidebar.open{transform:translateX(0)}.menu{display:block}.main{padding:11px}.status{display:none}.msg{max-width:92%}.result{grid-template-columns:1fr}.files{max-height:180px}.editor textarea{height:300px}}
+</style></head>
+<body><div class="layout">
+<aside class="sidebar" id="sidebar"><div class="brand"><div class="logo">K</div><div><b>Kilizix AI</b><div class="muted">Ваш AI-помощник</div></div></div><button class="sidebtn primary" id="newChat">＋ Новый чат</button><button class="sidebtn" id="codexBtn">⚡ Codex — создать проект</button><button class="sidebtn" id="pluginsBtn">🧩 Плагины</button><div class="chats-title">Твои чаты</div><div class="chat-list" id="chatList"></div><button class="sidebtn premium">✦ Kilizix.AI Premium<br><span class="muted">150 ₽ в год · без лимита</span></button></aside>
+<main class="main"><header><button class="menu" id="menu">☰</button><div class="header-logo">K</div><div class="header-title"><h2>Kilizix AI</h2><div class="sub">Локальный AI · WebGPU</div></div><div id="status" class="status loading">Запуск модели…</div><div id="account"></div></header>
+<section id="chat" class="chat"></section>
+<section id="codex" class="page hidden"><div class="page-head"><div><span class="badge">Kilizix Codex</span><h2>Создай что угодно</h2><div class="sub">Опиши проект — AI соберёт файлы.</div></div><button class="sidebtn" id="codexBack">← Чат</button></div><textarea id="codexPrompt" class="codex-prompt" placeholder="Например: создай сайт магазина с каталогом, корзиной и адаптивным дизайном"></textarea><div><button class="action" id="codexGenerate">⚡ Создать проект</button> <span id="codexStatus" class="status">Готов</span></div><div id="codexResult" class="result hidden"><div><div class="muted">Файлы проекта</div><div id="fileList" class="files"></div></div><div class="editor"><div id="fileTitle" class="muted">Файл</div><textarea id="fileContent"></textarea></div><div class="bottom"><button class="sidebtn" id="preview">▶ Предпросмотр</button><button class="action" id="download">⬇ Скачать ZIP</button></div></div></section>
+<section id="plugins" class="page hidden"><div class="page-head"><div><span class="badge">Kilizix Plugins</span><h2>Плагины</h2><div class="sub">Дополнительные возможности AI.</div></div><button class="sidebtn" id="pluginsBack">← Чат</button></div><div id="pluginGrid" class="plugin-grid"></div></section>
+<form id="form" class="composer"><input id="input" placeholder="Напишите сообщение…" autocomplete="off" disabled><button id="send" disabled>➤</button></form><div id="note" class="note">Модель запускается на вашем устройстве. Для работы нужен WebGPU.</div></main></div>
 <script type="module">
-import {CreateMLCEngine} from "https://esm.run/@mlc-ai/web-llm";
-
-const MODEL="Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
-const DAILY_LIMIT=15;
-const PREMIUM_PRICE=150;
-const TRIAL_DAYS=3;
-// После выбора канала заменим это значение на настоящий адрес.
-const TELEGRAM_CHANNEL_URL="https://t.me/";
-const chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("input"),send=document.getElementById("send"),status=document.getElementById("status"),note=document.getElementById("note");
-const chatList=document.getElementById("chatList"),modalBg=document.getElementById("modalBg"),modalTitle=document.getElementById("modalTitle"),modalText=document.getElementById("modalText"),modalPrice=document.getElementById("modalPrice"),modalActions=document.getElementById("modalActions");
-let engine=null, currentChatId=Date.now(), messages=[];
-
-const keyPrefix="kilizix_";
-function loadChats(){try{return JSON.parse(localStorage.getItem(keyPrefix+"chats")||"[]")}catch{return[]}}
-function saveChats(chats){localStorage.setItem(keyPrefix+"chats",JSON.stringify(chats.slice(-30)))}
-function saveCurrentChat(){
-  if(!messages.length)return;
-  const chats=loadChats(); const title=messages.find(x=>x.role==="user")?.content?.slice(0,38)||"Новый чат";
-  const item={id:currentChatId,title,messages};
-  const i=chats.findIndex(x=>x.id===currentChatId); if(i>=0)chats[i]=item;else chats.push(item);
-  saveChats(chats);renderChatList();
-}
-function renderChatList(){
-  chatList.innerHTML="";
-  loadChats().reverse().forEach(c=>{const b=document.createElement("button");b.className="chat-item"+(c.id===currentChatId?" active":"");b.textContent=c.title;b.onclick=()=>openChat(c.id);chatList.appendChild(b)});
-}
-function openChat(id){
-  const c=loadChats().find(x=>x.id===id); if(!c)return;
-  currentChatId=c.id;messages=c.messages||[];chat.innerHTML="";
-  if(!messages.length)add("assistant","Новый чат. Чем могу помочь?");
-  else messages.forEach(m=>add(m.role==="user"?"user":"assistant",m.content));
-  renderChatList(); document.getElementById("sidebar").classList.remove("open");
-}
-function newChat(){
-  saveCurrentChat();currentChatId=Date.now();messages=[];chat.innerHTML="";
-  add("assistant","Новый чат создан. Чем могу помочь?");renderChatList();
-  input.focus();document.getElementById("sidebar").classList.remove("open");
-}
+import {CreateMLCEngine} from "https://esm.run/@mlc-ai/web-llm@0.2.85";
+const MODEL="Qwen2.5-0.5B-Instruct-q4f16_1-MLC",chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("input"),send=document.getElementById("send"),status=document.getElementById("status"),chatList=document.getElementById("chatList");
+let engine=null,messages=[],chatId=Date.now(),files=[],selected=0;
+const plugins=[{id:"calculator",icon:"🧮",name:"Калькулятор",desc:"Точные вычисления."},{id:"writer",icon:"✍️",name:"Писатель",desc:"Письма, посты и документы."},{id:"translator",icon:"🌐",name:"Переводчик",desc:"Естественный перевод."},{id:"developer",icon:"💻",name:"Developer",desc:"Программирование и отладка."},{id:"research",icon:"🔎",name:"Research",desc:"Глубокий анализ."},{id:"github",icon:"🐙",name:"GitHub",desc:"Репозитории, чтение и запись файлов."}];
+function pget(){try{return JSON.parse(localStorage.getItem("kilizix_plugins")||"[]")}catch{return[]}}function pset(x){localStorage.setItem("kilizix_plugins",JSON.stringify(x))}function enabled(id){return pget().includes(id)}
 function add(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
-function showModal(title,text,price,actions){modalTitle.textContent=title;modalText.innerHTML=text;modalPrice.textContent=price||"";modalActions.innerHTML="";actions.forEach(a=>{const b=document.createElement("button");b.textContent=a.label;b.className=a.cls||"cancel";b.onclick=a.onClick;modalActions.appendChild(b)});modalBg.style.display="flex"}
-function closeModal(){modalBg.style.display="none"}
-modalBg.addEventListener("click",e=>{if(e.target===modalBg)closeModal()});
-
-function nowMinutes(){const d=new Date();return d.getHours()*60+d.getMinutes()}
-function limitWindow(){
-  const m=nowMinutes();
-  if(m>=0&&m<440)return {available:false,until:"07:20"};
-  if(m>=440&&m<780)return {available:true,until:"13:00"};
-  if(m>=780&&m<950)return {available:false,until:"15:50"};
-  return {available:true,until:"00:00"};
-}
-function dateKey(){const d=new Date();return d.toLocaleDateString("sv-SE")}
-function usage(){
-  const w=limitWindow(), k=keyPrefix+"usage_"+dateKey(), raw=JSON.parse(localStorage.getItem(k)||"{}");
-  if(raw.date!==dateKey())return {first:0,second:0};
-  return {first:Number(raw.first)||0,second:Number(raw.second)||0};
-}
-function isPremium(){const until=Number(localStorage.getItem(keyPrefix+"premiumUntil")||0);return until>Date.now()}
-function isTrial(){const until=Number(localStorage.getItem(keyPrefix+"trialUntil")||0);return until>Date.now()}
-function countUsed(){
-  const u=usage(); return nowMinutes()<780?u.first:u.second;
-}
-function consume(){
-  const w=limitWindow(); if(!w.available||isPremium()||isTrial())return true;
-  const k=keyPrefix+"usage_"+dateKey(),u=usage();
-  if(nowMinutes()<780)u.first++;else u.second++;
-  localStorage.setItem(k,JSON.stringify({date:dateKey(),...u}));return true;
-}
-function canSend(){
-  const w=limitWindow();
-  if(isPremium()||isTrial())return true;
-  if(!w.available){showLimitMessage(w.until);return false}
-  if(countUsed()>=DAILY_LIMIT){showLimitMessage(w.until);return false}
-  if(countUsed()===DAILY_LIMIT-1){
-    add("system","⚠️ Это ваш последний запрос в текущем окне. После него лимит обновится в "+w.until+". Premium снимает лимит.");
-  }
-  return true;
-}
-function showLimitMessage(until){
-  status.textContent="Лимит";
-  status.className="status limit";
-  add("system","⏳ Лимит бесплатных запросов достигнут. Следующее окно откроется в "+until+".\n\nKilizix.AI Premium за 150 ₽ в год снимает лимит. Также можно получить 3 дня без лимита за подписку на Telegram-канал.");
-  input.disabled=true;send.disabled=true;
-}
-function updateStatus(){
-  if(isPremium()){status.textContent="✦ Premium";status.className="status ready";note.textContent="Kilizix.AI Premium активен — лимита запросов нет.";return}
-  if(isTrial()){status.textContent="🎁 3 дня";status.className="status ready";note.textContent="Пробный доступ активен — лимита запросов нет.";return}
-  const w=limitWindow();
-  if(!w.available){status.textContent="Перерыв до "+w.until;status.className="status limit";note.textContent="Бесплатные запросы будут доступны в "+w.until+". Premium работает без перерывов."}
-  else{status.textContent="● Готов · "+countUsed()+"/"+DAILY_LIMIT;status.className="status ready";note.textContent="15 запросов в текущем окне. Premium за 150 ₽/год снимает лимит."}
-}
-function openPremium(){
-  showModal("Kilizix.AI Premium","Безлимитные запросы на весь срок подписки. Оплата — один раз в год.",PREMIUM_PRICE+" ₽ / год",[
-    {label:"Оплатить 150 ₽",cls:"buy",onClick:()=>{showModal("Оплата Premium","Платёжная система пока не подключена. Когда дадите реквизиты/платёжный сервис, эта кнопка будет вести на реальную оплату.",PREMIUM_PRICE+" ₽",[{label:"Закрыть",onClick:closeModal}])}},
-    {label:"Закрыть",onClick:closeModal}
-  ]);
-}
-function openTrial(){
-  showModal("3 дня без лимита","Подпишитесь на наш Telegram-канал, после чего система должна автоматически проверить подписку через Telegram-бота.", "",[
-    {label:"Открыть Telegram",cls:"buy",onClick:()=>window.open(TELEGRAM_CHANNEL_URL,"_blank")},
-    {label:"Проверить подписку",cls:"cancel",onClick:()=>{showModal("Проверка подписки","Автоматическая проверка будет подключена после указания канала и Telegram-бота.", "",[{label:"Закрыть",onClick:closeModal}])}},
-    {label:"Закрыть",onClick:closeModal}
-  ]);
-}
-
-document.getElementById("newChat").onclick=newChat;
-document.getElementById("premiumBtn").onclick=openPremium;
-document.getElementById("trialBtn").onclick=openTrial;
-document.getElementById("menuToggle").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
-
-const codexBtn=document.getElementById("codexBtn"),codex=document.getElementById("codex"),codexBack=document.getElementById("codexBack");
-const codexPrompt=document.getElementById("codexPrompt"),codexGenerate=document.getElementById("codexGenerate"),codexStatus=document.getElementById("codexStatus");
-const codexResult=document.getElementById("codexResult"),codexFileList=document.getElementById("codexFileList"),codexFileTitle=document.getElementById("codexFileTitle"),codexFileContent=document.getElementById("codexFileContent");
-let codexFiles=[],codexSelected=0;
-function openCodex(){document.querySelector(".chat").classList.add("hidden");form.classList.add("hidden");note.classList.add("hidden");codex.classList.remove("hidden");document.getElementById("sidebar").classList.remove("open");codexPrompt.focus()}
-function closeCodex(){codex.classList.add("hidden");document.querySelector(".chat").classList.remove("hidden");form.classList.remove("hidden");note.classList.remove("hidden")}
-codexBtn.onclick=openCodex;codexBack.onclick=closeCodex;
-function selectCodexFile(i){codexSelected=i;const f=codexFiles[i];if(!f)return;codexFileTitle.textContent=f.path;codexFileContent.value=f.content;document.querySelectorAll(".codex-file").forEach((b,n)=>b.classList.toggle("active",n===i))}
-function renderCodexFiles(){codexFileList.innerHTML="";codexFiles.forEach((f,i)=>{const b=document.createElement("button");b.className="codex-file"+(i===codexSelected?" active":"");b.textContent=f.path;b.onclick=()=>selectCodexFile(i);codexFileList.appendChild(b)});if(codexFiles.length)selectCodexFile(codexSelected)}
-function parseCodex(text){try{const clean=text.replace(/^```(?:json)?/i,"").replace(/```$/,"").trim();const obj=JSON.parse(clean);if(Array.isArray(obj.files))return obj.files.filter(x=>x&&x.path).map(x=>({path:String(x.path),content:String(x.content??"")}))}catch{}const out=[];const re=/(?:^|\n)(?:FILE|ФАЙЛ)\s*:\s*([^\n]+)\n([\s\S]*?)(?=(?:\n(?:FILE|ФАЙЛ)\s*:)|$)/gi;let m;while((m=re.exec(text)))out.push({path:m[1].trim(),content:m[2].trim()});return out}
-async function generateCodex(){const prompt=codexPrompt.value.trim();if(!prompt||!engine){codexStatus.textContent="Модель ещё не готова";return}codexStatus.textContent="Создаю проект…";codexGenerate.disabled=true;const instruction="Ты Kilizix Codex — автономный генератор программных проектов. Пользователь хочет: "+prompt+"\nСгенерируй рабочий проект, а не объяснение. Верни ТОЛЬКО валидный JSON без markdown: {\"project_name\":\"название\",\"files\":[{\"path\":\"index.html\",\"content\":\"...\"}]}. Создавай все важные файлы проекта. Не включай бинарные файлы, секреты, API-ключи и node_modules. Пути относительные. Для сайта обязательно index.html и CSS/JS при необходимости.";try{const res=await engine.chat.completions.create({messages:[{role:"system",content:instruction}],temperature:.2,max_tokens:4096});const raw=res.choices?.[0]?.message?.content||"";codexFiles=parseCodex(raw);if(!codexFiles.length)throw new Error("Модель не вернула структуру файлов. Опиши проект подробнее.");codexSelected=0;codexResult.classList.remove("hidden");renderCodexFiles();codexStatus.textContent="Готово · "+codexFiles.length+" файлов"}catch(e){codexStatus.textContent="Ошибка";alert("Codex: "+e.message)}finally{codexGenerate.disabled=false}}
-codexGenerate.onclick=generateCodex;codexPrompt.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")generateCodex()});
-codexFileContent.addEventListener("input",()=>{if(codexFiles[codexSelected])codexFiles[codexSelected].content=codexFileContent.value});
-document.getElementById("codexDownload").onclick=async()=>{if(!codexFiles.length)return;if(!window.JSZip){const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";document.head.appendChild(sc);await new Promise(r=>sc.onload=r)}const zip=new JSZip();codexFiles.forEach(f=>zip.file(f.path,f.content));const blob=await zip.generateAsync({type:"blob"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="kilizix-project.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
-document.getElementById("codexPreview").onclick=()=>{const f=codexFiles.find(x=>x.path.toLowerCase()==="index.html"||x.path.toLowerCase().endsWith("/index.html"));if(!f){alert("В проекте нет index.html для предпросмотра.");return}const w=window.open("about:blank","_blank");if(w)w.document.write(f.content)};
-const pluginsBtn=document.getElementById("pluginsBtn"),plugins=document.getElementById("plugins"),pluginsBack=document.getElementById("pluginsBack");
-const PLUGINS=[
-{id:"calculator",icon:"🧮",name:"Калькулятор",desc:"Точные математические вычисления прямо в Kilizix.",instruction:"Когда пользователь просит посчитать, вычисляй точно. Для простых арифметических выражений используй JavaScript-калькулятор.",tool:"calculator"},
-{id:"writer",icon:"✍️",name:"Писатель",desc:"Помогает создавать письма, посты, документы и тексты.",instruction:"Помогай создавать качественные тексты. Сначала учитывай цель, аудиторию и тон пользователя.",tool:"none"},
-{id:"translator",icon:"🌐",name:"Переводчик",desc:"Переводит тексты и сохраняет смысл и стиль.",instruction:"Если пользователь просит перевод, переводи естественно, сохраняя смысл, форматирование и тон.",tool:"none"},
-{id:"developer",icon:"💻",name:"Developer",desc:"Усиленный режим для программирования и отладки.",instruction:"Для программирования анализируй задачу как senior developer: предлагай рабочий код, учитывай ошибки, безопасность и структуру проекта.",tool:"none"},
-{id:"research",icon:"🔎",name:"Research",desc:"Режим глубокого анализа информации и источников.",instruction:"Разделяй факты, предположения и неизвестное. Для исследовательских ответов предлагай источники и проверяемые шаги.",tool:"none"},
-{id:"files",icon:"📁",name:"Файлы",desc:"Работа с файлами проекта, структурами и содержимым.",instruction:"При работе с проектом думай в терминах файлов, путей, зависимостей и структуры проекта. Предлагай полный набор нужных файлов.",tool:"none"},
-{id:"github",icon:"🐙",name:"GitHub",desc:"Подключает GitHub к Kilizix: репозитории, файлы, чтение и запись изменений.",instruction:"Если подключён GitHub, используй данные репозиториев и файлов только через GitHub-инструменты. Перед изменением файлов явно сообщай, что собираешься изменить, и не запрашивай секретные токены в чате.",tool:"github"}
-];
-function installedPlugins(){try{return JSON.parse(localStorage.getItem("kilizix_plugins")||"[]")}catch{return[]}}
-function savePlugins(x){localStorage.setItem("kilizix_plugins",JSON.stringify(x))}
-function pluginEnabled(id){return installedPlugins().includes(id)}
-async function githubStatus(){try{return await (await fetch("/api/github/status")).json()}catch{return {connected:false}}}
-async function renderGithubControls(card){
-  const s=await githubStatus();
-  const meta=card.querySelector(".plugin-meta");
-  const install=card.querySelector(".plugin-install");
-  if(!pluginEnabled("github")) return;
-  if(s.connected){
-    meta.textContent="● GitHub подключён · @"+s.login;
-    install.textContent="Работать с GitHub";
-    install.className="plugin-install";
-    const box=document.createElement("div");
-    box.style.cssText="display:flex;flex-direction:column;gap:7px;margin-top:4px";
-    box.innerHTML=`<select class="gh-repo" style="background:#0d0d12;color:#fff;border:1px solid #ffffff18;border-radius:10px;padding:9px"></select>
-      <input class="gh-path" placeholder="Путь к файлу, например public/index.html" style="background:#0d0d12;color:#fff;border:1px solid #ffffff18;border-radius:10px;padding:9px">
-      <button class="plugin-install gh-load">📖 Открыть файл</button>
-      <textarea class="gh-content" placeholder="Содержимое файла" style="display:none;width:100%;min-height:180px;resize:vertical;background:#09090d;color:#ddd;border:1px solid #ffffff10;border-radius:12px;padding:10px;font:12px/1.5 ui-monospace,monospace"></textarea>
-      <button class="plugin-install gh-save" style="display:none">💾 Сохранить в GitHub</button>`;
-    card.appendChild(box);
-    const select=box.querySelector(".gh-repo"), path=box.querySelector(".gh-path"), content=box.querySelector(".gh-content"), save=box.querySelector(".gh-save");
-    const rr=await fetch("/api/github/repos"); const jj=await rr.json();
-    if(rr.ok) jj.repos.forEach(x=>{const o=document.createElement("option");o.value=x.full_name;o.textContent=(x.private?"🔒 ":"")+x.full_name;select.appendChild(o)});
-    let fileSha="";
-    box.querySelector(".gh-load").onclick=async()=>{
-      const [owner,rname]=select.value.split("/");
-      if(!owner||!rname||!path.value.trim()){alert("Выберите репозиторий и укажите путь к файлу.");return}
-      const r=await fetch("/api/github/file?owner="+encodeURIComponent(owner)+"&repo="+encodeURIComponent(rname)+"&path="+encodeURIComponent(path.value.trim()));
-      const j=await r.json(); if(!r.ok){alert(j.error||"Не удалось открыть файл");return}
-      content.style.display="block";save.style.display="block";content.value=j.content;fileSha=j.sha;
-    };
-    save.onclick=async()=>{
-      const [owner,rname]=select.value.split("/");
-      if(!confirm("Сохранить изменения в GitHub? Это создаст commit в выбранном репозитории."))return;
-      const r=await fetch("/api/github/file",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({owner,repo:rname,path:path.value.trim(),content:content.value,sha:fileSha,message:"Update from Kilizix AI"})});
-      const j=await r.json(); if(!r.ok){alert(j.error||"Не удалось сохранить");return}
-      fileSha=j.content_sha||fileSha; alert("Готово. Изменения сохранены в GitHub.");
-    };
-    install.onclick=()=>box.scrollIntoView({behavior:"smooth",block:"center"});
-    const disconnect=document.createElement("button");disconnect.className="plugin-install off";disconnect.textContent="Отключить GitHub";disconnect.onclick=async()=>{await fetch("/api/github/logout",{method:"POST"});renderPlugins()};card.appendChild(disconnect);
-  }else{
-    install.textContent="Подключить GitHub";
-    install.onclick=()=>{location.href="/api/github/login"};
-  }
-}
-function renderPlugins(){const grid=document.getElementById("pluginGrid");grid.innerHTML="";PLUGINS.forEach(p=>{const card=document.createElement("div");card.className="plugin-card";const on=pluginEnabled(p.id);card.innerHTML=`<div class="plugin-icon">${p.icon}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="plugin-meta">${on?"● Подключён":"○ Не установлен"}</div><button class="plugin-install ${on?"off":""}">${on?"Отключить":"Установить"}</button>`;card.querySelector("button").onclick=()=>{let x=installedPlugins();if(on)x=x.filter(v=>v!==p.id);else x.push(p.id);savePlugins(x);renderPlugins();updatePluginChips()};grid.appendChild(card)})}
-const _renderPluginsBase=renderPlugins;
-renderPlugins=()=>{_renderPluginsBase();const card=[...document.querySelectorAll(".plugin-card")].find(x=>x.querySelector("h3")?.textContent==="GitHub");if(card)renderGithubControls(card)};
-function updatePluginChips(){let box=document.querySelector(".active-plugins");if(!box){box=document.createElement("div");box.className="active-plugins";form.parentNode.insertBefore(box,form)}box.innerHTML="";PLUGINS.filter(p=>pluginEnabled(p.id)).forEach(p=>{const c=document.createElement("span");c.className="plugin-chip";c.textContent=p.icon+" "+p.name;box.appendChild(c)})}
-function openPlugins(){document.querySelector(".chat").classList.add("hidden");form.classList.add("hidden");note.classList.add("hidden");codex.classList.add("hidden");plugins.classList.remove("hidden");renderPlugins();document.getElementById("sidebar").classList.remove("open")}
-function closePlugins(){plugins.classList.add("hidden");document.querySelector(".chat").classList.remove("hidden");form.classList.remove("hidden");note.classList.remove("hidden")}
-pluginsBtn.onclick=openPlugins;pluginsBack.onclick=closePlugins;renderPlugins();updatePluginChips();
-function pluginContext(){const active=PLUGINS.filter(p=>pluginEnabled(p.id));if(!active.length)return "";return "\nПодключённые плагины пользователя:\n"+active.map(p=>"- "+p.name+": "+p.instruction).join("\n")}
-function calculatorTool(text){try{const q=text.replace(/[^0-9+\-*/().,%\s]/g,"").replace(/,/g,".");if(!q.trim())return null;const result=Function("\"use strict\";return ("+q+")")();if(Number.isFinite(result))return String(result)}catch{}return null}
-
-
-
-form.addEventListener("submit",async e=>{
- e.preventDefault();const text=input.value.trim();if(!text||!engine||!canSend())return;
- consume();messages.push({role:"user",content:text});add("user",text);input.value="";send.disabled=true;updateStatus();
- try{
-   const res=await engine.chat.completions.create({
-     messages:[{role:"system",content:"Ты Kilizix AI — дружелюбный и полезный ИИ-помощник. Отвечай на русском, если пользователь пишет по-русски."+pluginContext()},...messages.slice(-12)],
-     temperature:0.7,max_tokens:512
-   });
-   const reply=res.choices?.[0]?.message?.content||"Не удалось получить ответ.";
-   messages.push({role:"assistant",content:reply});add("assistant",reply);saveCurrentChat();
- }catch(err){add("assistant","Ошибка: "+err.message)}
- finally{send.disabled=false;input.focus();updateStatus()}
-});
-
-renderChatList();
-updateStatus();
-async function init(){
- try{
-   engine=await CreateMLCEngine(MODEL,{initProgressCallback:p=>{status.textContent=p.text||"Загрузка модели…";status.className="status loading"}});
-   updateStatus();input.disabled=false;send.disabled=false;input.focus();
-   add("assistant","Готово. Я работаю локально на вашем устройстве — без OpenAI API.");
- }catch(e){
-   status.textContent="Ошибка";status.className="status limit";
-   add("assistant","Не удалось запустить локальную модель. Нужен современный браузер с поддержкой WebGPU. Попробуйте последнюю версию Chrome или Edge.\n\n"+e.message);
- }
-}
+function chats(){try{return JSON.parse(localStorage.getItem("kilizix_chats")||"[]")}catch{return[]}}
+function save(){if(!messages.length)return;const a=chats(),title=messages.find(x=>x.role==="user")?.content?.slice(0,40)||"Новый чат",item={id:chatId,title,messages};const i=a.findIndex(x=>x.id===chatId);if(i>=0)a[i]=item;else a.push(item);localStorage.setItem("kilizix_chats",JSON.stringify(a.slice(-30)));renderChats()}
+function renderChats(){chatList.innerHTML="";chats().reverse().forEach(c=>{const b=document.createElement("button");b.className="chat-item"+(c.id===chatId?" active":"");b.textContent=c.title;b.onclick=()=>openChat(c.id);chatList.appendChild(b)})}
+function openChat(id){const c=chats().find(x=>x.id===id);if(!c)return;chatId=c.id;messages=c.messages||[];chat.innerHTML="";messages.forEach(x=>add(x.role,x.content));renderChats()}
+function newChat(){save();chatId=Date.now();messages=[];chat.innerHTML="";add("assistant","Новый чат создан. Чем могу помочь?");renderChats();input.focus()}
+function context(){const x=pget();return x.length?"\nАктивные плагины: "+x.join(", "):""}
+async function renderAuth(){const box=document.getElementById("account");try{const s=await (await fetch("/api/auth/status")).json();box.innerHTML="";if(s.authenticated&&s.user){const u=s.user,w=document.createElement("div");w.className="account";if(u.picture){const img=document.createElement("img");img.src=u.picture;w.appendChild(img)}const n=document.createElement("span");n.textContent=u.name;w.appendChild(n);const out=document.createElement("button");out.textContent="Выйти";out.onclick=async()=>{await fetch("/api/auth/logout",{method:"POST"});renderAuth()};w.appendChild(out);box.appendChild(w)}else{const b=document.createElement("button");b.className="login";b.textContent="Войти через Google";b.onclick=()=>location.href="/api/auth/google";box.appendChild(b)}}catch{}}
+document.getElementById("newChat").onclick=newChat;document.getElementById("menu").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
+function show(section){["chat","codex","plugins"].forEach(id=>document.getElementById(id).classList.toggle("hidden",id!==section));document.getElementById("sidebar").classList.remove("open")}
+document.getElementById("codexBtn").onclick=()=>show("codex");document.getElementById("codexBack").onclick=()=>show("chat");document.getElementById("pluginsBtn").onclick=()=>{show("plugins");renderPlugins()};document.getElementById("pluginsBack").onclick=()=>show("chat");
+function renderPlugins(){const grid=document.getElementById("pluginGrid");grid.innerHTML="";plugins.forEach(p=>{const on=enabled(p.id),card=document.createElement("div");card.className="plugin";card.innerHTML="<div style='font-size:27px'>"+p.icon+"</div><h3>"+p.name+"</h3><p>"+p.desc+"</p><button class='sidebtn "+(on?"":"primary")+"'>"+(on?"Отключить":"Установить")+"</button>";card.querySelector("button").onclick=()=>{let x=pget();if(on)x=x.filter(v=>v!==p.id);else x.push(p.id);pset(x);renderPlugins()};if(p.id==="github"&&on){const box=document.createElement("div");box.className="ghbox";box.innerHTML="<div class='muted' id='ghState'>Проверка GitHub…</div><select id='ghRepo'></select><input id='ghPath' placeholder='Путь, например public/index.html'><button class='sidebtn' id='ghLoad'>📖 Открыть файл</button><textarea id='ghContent' style='display:none'></textarea><button class='sidebtn primary' id='ghSave' style='display:none'>💾 Сохранить</button><button class='sidebtn' id='ghOut'>Отключить GitHub</button>";card.appendChild(box);setupGithub(box)}grid.appendChild(card)})}
+async function setupGithub(box){const s=await (await fetch("/api/github/status")).json(),state=box.querySelector("#ghState");if(!s.connected){state.textContent="GitHub не подключён";box.querySelector("#ghRepo").style.display="none";box.querySelector("#ghPath").style.display="none";box.querySelector("#ghLoad").textContent="Подключить GitHub";box.querySelector("#ghLoad").onclick=()=>location.href="/api/github/login";box.querySelector("#ghOut").style.display="none";return}state.textContent="● Подключён · @"+s.login;const repoSel=box.querySelector("#ghRepo"),r=await fetch("/api/github/repos"),j=await r.json();if(r.ok)j.repos.forEach(x=>{const o=document.createElement("option");o.value=x.full_name;o.textContent=(x.private?"🔒 ":"")+x.full_name;repoSel.appendChild(o)});let sha="";box.querySelector("#ghLoad").onclick=async()=>{const [owner,repo]=repoSel.value.split("/"),path=box.querySelector("#ghPath").value.trim();if(!owner||!repo||!path)return alert("Выберите репозиторий и укажите путь.");const r=await fetch("/api/github/file?owner="+encodeURIComponent(owner)+"&repo="+encodeURIComponent(repo)+"&path="+encodeURIComponent(path)),j=await r.json();if(!r.ok)return alert(j.error||"Ошибка");box.querySelector("#ghContent").style.display="block";box.querySelector("#ghSave").style.display="block";box.querySelector("#ghContent").value=j.content;sha=j.sha};box.querySelector("#ghSave").onclick=async()=>{const [owner,repo]=repoSel.value.split("/"),path=box.querySelector("#ghPath").value.trim();if(!confirm("Создать commit с этим изменением?"))return;const r=await fetch("/api/github/file",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({owner,repo,path,content:box.querySelector("#ghContent").value,sha,message:"Update from Kilizix AI"})}),j=await r.json();if(!r.ok)return alert(j.error||"Ошибка");sha=j.content_sha||sha;alert("Изменение сохранено в GitHub.")};box.querySelector("#ghOut").onclick=async()=>{await fetch("/api/github/logout",{method:"POST"});renderPlugins()}}
+function cleanJson(s){return s.replace(new RegExp("^"+String.fromCharCode(96).repeat(3)+"json","i"),"").replace(new RegExp(String.fromCharCode(96).repeat(3)+"$"),"").trim()}
+async function codexGenerate(){const prompt=document.getElementById("codexPrompt").value.trim(),out=document.getElementById("codexStatus");if(!prompt||!engine)return;out.textContent="Создаю…";document.getElementById("codexGenerate").disabled=true;try{const r=await engine.chat.completions.create({messages:[{role:"system",content:"Ты Kilizix Codex. Верни только JSON без markdown в формате {project_name,files:[{path,content}]}. Создай рабочий проект по запросу пользователя. Не добавляй секреты и node_modules."},{role:"user",content:prompt}],temperature:.2,max_tokens:4096});const o=JSON.parse(cleanJson(r.choices?.[0]?.message?.content||""));files=(o.files||[]).filter(x=>x.path).map(x=>({path:String(x.path),content:String(x.content||"")}));if(!files.length)throw Error("AI не вернул файлы");selected=0;renderFiles();document.getElementById("codexResult").classList.remove("hidden");out.textContent="Готово · "+files.length+" файлов"}catch(e){out.textContent="Ошибка";alert("Codex: "+e.message)}finally{document.getElementById("codexGenerate").disabled=false}}
+function renderFiles(){const list=document.getElementById("fileList");list.innerHTML="";files.forEach((f,i)=>{const b=document.createElement("button");b.className="file"+(i===selected?" active":"");b.textContent=f.path;b.onclick=()=>{selected=i;renderFiles()};list.appendChild(b)});if(files[selected]){document.getElementById("fileTitle").textContent=files[selected].path;document.getElementById("fileContent").value=files[selected].content}}
+document.getElementById("codexGenerate").onclick=codexGenerate;document.getElementById("fileContent").oninput=e=>{if(files[selected])files[selected].content=e.target.value};document.getElementById("preview").onclick=()=>{const f=files.find(x=>x.path.toLowerCase()==="index.html");if(!f)return alert("Нет index.html");const w=window.open("about:blank","_blank");if(w)w.document.write(f.content)};document.getElementById("download").onclick=async()=>{if(!window.JSZip){const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";document.head.appendChild(s);await new Promise(r=>s.onload=r)}const z=new JSZip();files.forEach(f=>z.file(f.path,f.content));const b=await z.generateAsync({type:"blob"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="kilizix-project.zip";a.click()};
+form.onsubmit=async e=>{e.preventDefault();const text=input.value.trim();if(!text||!engine)return;messages.push({role:"user",content:text});add("user",text);input.value="";send.disabled=true;try{const r=await engine.chat.completions.create({messages:[{role:"system",content:"Ты Kilizix AI — полезный ИИ-помощник. Отвечай на русском, если пользователь пишет по-русски."+context()},...messages.slice(-12)],temperature:.7,max_tokens:700});const reply=r.choices?.[0]?.message?.content||"Не удалось получить ответ.";messages.push({role:"assistant",content:reply});add("assistant",reply);save()}catch(e){add("assistant","Ошибка AI: "+e.message)}finally{send.disabled=false;input.focus()}};
+async function init(){renderChats();renderAuth();add("assistant","Запускаю локальную модель…");try{if(!navigator.gpu)throw Error("WebGPU недоступен. Обновите Chrome/Edge и включите аппаратное ускорение.");engine=await CreateMLCEngine(MODEL,{initProgressCallback:p=>{status.textContent=p.text||"Загрузка модели…";status.className="status loading"}});status.textContent="● Готов";status.className="status ready";input.disabled=false;send.disabled=false;input.focus();chat.innerHTML="";add("assistant","Готово. Я работаю прямо в браузере без платного API.")}catch(e){status.textContent="Ошибка AI";status.className="status error";input.disabled=true;send.disabled=true;chat.innerHTML="";add("system","Не удалось запустить AI.\n\n"+e.message+"\n\nПроверьте WebGPU в Chrome/Edge и перезагрузите страницу.")}}
 init();
-</script>
-</body>
-</html>
+</script></body></html>
