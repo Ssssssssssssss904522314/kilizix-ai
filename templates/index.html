@@ -41,7 +41,7 @@ h2{font-size:22px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:3px
 @media(max-width:760px){.sidebar{width:220px}.main{padding:12px}.chat{min-height:58vh}}
 @media(max-width:620px){.sidebar{position:fixed;z-index:5;left:0;top:0;bottom:0;transform:translateX(-100%);transition:.25s;width:270px}.sidebar.open{transform:translateX(0)}.menu-toggle{display:block!important}.main{width:100%}.msg{max-width:90%}.status{display:none}}
 .menu-toggle{display:none;border:1px solid var(--line);background:#ffffff08;color:#fff;border-radius:12px;padding:8px 11px;cursor:pointer}
-.codex{display:flex;flex-direction:column;gap:14px;min-height:70vh}.hidden{display:none!important}.codex-head{display:flex;align-items:center;justify-content:space-between;gap:14px}.codex-head h2{margin:8px 0 3px}.codex-prompt{width:100%;min-height:150px;resize:vertical;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:20px;padding:16px;outline:none;font:inherit;line-height:1.5}.codex-prompt:focus{border-color:#ffffff38}.codex-actions,.codex-bottom{display:flex;align-items:center;gap:10px}.codex-generate{border:0;border-radius:15px;padding:12px 17px;background:#fff;color:#111;font-weight:800;cursor:pointer}.codex-result{display:grid;grid-template-columns:230px 1fr;gap:10px;border:1px solid var(--line);border-radius:20px;background:#ffffff05;padding:10px}.codex-files,.codex-editor{min-width:0}.codex-title{font-size:12px;color:#999;padding:7px 8px;text-transform:uppercase;letter-spacing:.07em}#codexFileList{display:flex;flex-direction:column;gap:3px;max-height:410px;overflow:auto}.codex-file{border:0;background:transparent;color:#ddd;text-align:left;border-radius:9px;padding:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.codex-file:hover,.codex-file.active{background:#ffffff0d}#codexFileContent{width:100%;height:410px;resize:none;background:#09090d;color:#ddd;border:1px solid #ffffff10;border-radius:14px;padding:14px;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}.codex-bottom{grid-column:1/-1;justify-content:flex-end}@media(max-width:700px){.codex-result{grid-template-columns:1fr}.codex-files{order:2}.codex-editor{order:1}.codex-bottom{order:3}}</style>
+.codex{display:flex;flex-direction:column;gap:14px;min-height:70vh}.hidden{display:none!important}.codex-head{display:flex;align-items:center;justify-content:space-between;gap:14px}.codex-head h2{margin:8px 0 3px}.codex-prompt{width:100%;min-height:150px;resize:vertical;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:20px;padding:16px;outline:none;font:inherit;line-height:1.5}.codex-prompt:focus{border-color:#ffffff38}.codex-actions,.codex-bottom{display:flex;align-items:center;gap:10px}.codex-generate{border:0;border-radius:15px;padding:12px 17px;background:#fff;color:#111;font-weight:800;cursor:pointer}.codex-result{display:grid;grid-template-columns:230px 1fr;gap:10px;border:1px solid var(--line);border-radius:20px;background:#ffffff05;padding:10px}.codex-files,.codex-editor{min-width:0}.codex-title{font-size:12px;color:#999;padding:7px 8px;text-transform:uppercase;letter-spacing:.07em}#codexFileList{display:flex;flex-direction:column;gap:3px;max-height:410px;overflow:auto}.codex-file{border:0;background:transparent;color:#ddd;text-align:left;border-radius:9px;padding:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.codex-file:hover,.codex-file.active{background:#ffffff0d}#codexFileContent{width:100%;height:410px;resize:none;background:#09090d;color:#ddd;border:1px solid #ffffff10;border-radius:14px;padding:14px;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}.codex-bottom{grid-column:1/-1;justify-content:flex-end}@media(max-width:700px){.codex-result{grid-template-columns:1fr}.codex-files{order:2}.codex-editor{order:1}.codex-bottom{order:3}}.plugins{display:flex;flex-direction:column;gap:14px;min-height:70vh}.plugin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.plugin-card{border:1px solid #ffffff12;background:#ffffff06;border-radius:20px;padding:17px;display:flex;flex-direction:column;gap:9px}.plugin-icon{font-size:28px}.plugin-card h3{margin:0}.plugin-card p{margin:0;color:#999;font-size:13px;line-height:1.45}.plugin-meta{font-size:11px;color:#777}.plugin-install{border:0;border-radius:12px;padding:10px;background:#fff;color:#111;font-weight:800;cursor:pointer;margin-top:auto}.plugin-install.off{background:#ffffff0d;color:#fff;border:1px solid #ffffff12}.active-plugins{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.plugin-chip{font-size:11px;border:1px solid #ffffff12;background:#ffffff08;border-radius:999px;padding:5px 8px;color:#bbb}@media(max-width:700px){.plugin-grid{grid-template-columns:1fr}}</style>
 </head>
 <body>
 <div class="layout">
@@ -49,6 +49,7 @@ h2{font-size:22px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:3px
   <div class="brand"><div class="logo">K</div><div><b>Kilizix AI</b><div>Ваш AI-помощник</div></div></div>
   <button class="sidebtn primary" id="newChat">＋ Новый чат</button>
   <button class="sidebtn" id="codexBtn">⚡ Codex — создать проект</button>
+  <button class="sidebtn" id="pluginsBtn">🧩 Плагины</button>
   <div class="chats-title">Твои чаты</div>
   <div class="chat-list" id="chatList"></div>
   <button class="sidebtn premium" id="premiumBtn"><b>✦ Kilizix.AI Premium</b><span>150 ₽ в год · без лимита</span></button>
@@ -62,6 +63,10 @@ h2{font-size:22px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:3px
   <div><h2>Kilizix AI</h2><div class="sub">Локальный AI без платного API</div></div>
   <div id="status" class="status">Загрузка модели…</div>
 </header>
+<section class="plugins hidden" id="plugins">
+<div class="codex-head"><div><span class="badge">Kilizix Plugins</span><h2>Плагины</h2><div class="sub">Подключай дополнительные возможности к Kilizix AI.</div></div><button class="sidebtn" id="pluginsBack">← Чат</button></div>
+<div class="plugin-grid" id="pluginGrid"></div>
+</section>
 <section class="codex hidden" id="codex">
 <div class="codex-head"><div><span class="badge">Kilizix Codex</span><h2>Создай что угодно</h2><div class="sub">Опиши результат обычными словами — Codex соберёт структуру проекта и файлы.</div></div><button class="sidebtn" id="codexBack">← Чат</button></div>
 <textarea id="codexPrompt" class="codex-prompt" placeholder="Например: создай современный сайт интернет-магазина с главной страницей, каталогом, корзиной и адаптивным дизайном..."></textarea>
@@ -208,12 +213,34 @@ codexGenerate.onclick=generateCodex;codexPrompt.addEventListener("keydown",e=>{i
 codexFileContent.addEventListener("input",()=>{if(codexFiles[codexSelected])codexFiles[codexSelected].content=codexFileContent.value});
 document.getElementById("codexDownload").onclick=async()=>{if(!codexFiles.length)return;if(!window.JSZip){const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";document.head.appendChild(sc);await new Promise(r=>sc.onload=r)}const zip=new JSZip();codexFiles.forEach(f=>zip.file(f.path,f.content));const blob=await zip.generateAsync({type:"blob"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="kilizix-project.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
 document.getElementById("codexPreview").onclick=()=>{const f=codexFiles.find(x=>x.path.toLowerCase()==="index.html"||x.path.toLowerCase().endsWith("/index.html"));if(!f){alert("В проекте нет index.html для предпросмотра.");return}const w=window.open("about:blank","_blank");if(w)w.document.write(f.content)};
+const pluginsBtn=document.getElementById("pluginsBtn"),plugins=document.getElementById("plugins"),pluginsBack=document.getElementById("pluginsBack");
+const PLUGINS=[
+{id:"calculator",icon:"🧮",name:"Калькулятор",desc:"Точные математические вычисления прямо в Kilizix.",instruction:"Когда пользователь просит посчитать, вычисляй точно. Для простых арифметических выражений используй JavaScript-калькулятор.",tool:"calculator"},
+{id:"writer",icon:"✍️",name:"Писатель",desc:"Помогает создавать письма, посты, документы и тексты.",instruction:"Помогай создавать качественные тексты. Сначала учитывай цель, аудиторию и тон пользователя.",tool:"none"},
+{id:"translator",icon:"🌐",name:"Переводчик",desc:"Переводит тексты и сохраняет смысл и стиль.",instruction:"Если пользователь просит перевод, переводи естественно, сохраняя смысл, форматирование и тон.",tool:"none"},
+{id:"developer",icon:"💻",name:"Developer",desc:"Усиленный режим для программирования и отладки.",instruction:"Для программирования анализируй задачу как senior developer: предлагай рабочий код, учитывай ошибки, безопасность и структуру проекта.",tool:"none"},
+{id:"research",icon:"🔎",name:"Research",desc:"Режим глубокого анализа информации и источников.",instruction:"Разделяй факты, предположения и неизвестное. Для исследовательских ответов предлагай источники и проверяемые шаги.",tool:"none"},
+{id:"files",icon:"📁",name:"Файлы",desc:"Работа с файлами проекта, структурами и содержимым.",instruction:"При работе с проектом думай в терминах файлов, путей, зависимостей и структуры проекта. Предлагай полный набор нужных файлов.",tool:"none"}
+];
+function installedPlugins(){try{return JSON.parse(localStorage.getItem("kilizix_plugins")||"[]")}catch{return[]}}
+function savePlugins(x){localStorage.setItem("kilizix_plugins",JSON.stringify(x))}
+function pluginEnabled(id){return installedPlugins().includes(id)}
+function renderPlugins(){const grid=document.getElementById("pluginGrid");grid.innerHTML="";PLUGINS.forEach(p=>{const card=document.createElement("div");card.className="plugin-card";const on=pluginEnabled(p.id);card.innerHTML=`<div class="plugin-icon">${p.icon}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="plugin-meta">${on?"● Подключён":"○ Не установлен"}</div><button class="plugin-install ${on?"off":""}">${on?"Отключить":"Установить"}</button>`;card.querySelector("button").onclick=()=>{let x=installedPlugins();if(on)x=x.filter(v=>v!==p.id);else x.push(p.id);savePlugins(x);renderPlugins();updatePluginChips()};grid.appendChild(card)})}
+function updatePluginChips(){let box=document.querySelector(".active-plugins");if(!box){box=document.createElement("div");box.className="active-plugins";form.parentNode.insertBefore(box,form)}box.innerHTML="";PLUGINS.filter(p=>pluginEnabled(p.id)).forEach(p=>{const c=document.createElement("span");c.className="plugin-chip";c.textContent=p.icon+" "+p.name;box.appendChild(c)})}
+function openPlugins(){document.querySelector(".chat").classList.add("hidden");form.classList.add("hidden");note.classList.add("hidden");codex.classList.add("hidden");plugins.classList.remove("hidden");renderPlugins();document.getElementById("sidebar").classList.remove("open")}
+function closePlugins(){plugins.classList.add("hidden");document.querySelector(".chat").classList.remove("hidden");form.classList.remove("hidden");note.classList.remove("hidden")}
+pluginsBtn.onclick=openPlugins;pluginsBack.onclick=closePlugins;renderPlugins();updatePluginChips();
+function pluginContext(){const active=PLUGINS.filter(p=>pluginEnabled(p.id));if(!active.length)return "";return "\nПодключённые плагины пользователя:\n"+active.map(p=>"- "+p.name+": "+p.instruction).join("\n")}
+function calculatorTool(text){try{const q=text.replace(/[^0-9+\-*/().,%\s]/g,"").replace(/,/g,".");if(!q.trim())return null;const result=Function("\"use strict\";return ("+q+")")();if(Number.isFinite(result))return String(result)}catch{}return null}
+
+
+
 form.addEventListener("submit",async e=>{
  e.preventDefault();const text=input.value.trim();if(!text||!engine||!canSend())return;
  consume();messages.push({role:"user",content:text});add("user",text);input.value="";send.disabled=true;updateStatus();
  try{
    const res=await engine.chat.completions.create({
-     messages:[{role:"system",content:"Ты Kilizix AI — дружелюбный и полезный ИИ-помощник. Отвечай на русском, если пользователь пишет по-русски."},...messages.slice(-12)],
+     messages:[{role:"system",content:"Ты Kilizix AI — дружелюбный и полезный ИИ-помощник. Отвечай на русском, если пользователь пишет по-русски."+pluginContext()},...messages.slice(-12)],
      temperature:0.7,max_tokens:512
    });
    const reply=res.choices?.[0]?.message?.content||"Не удалось получить ответ.";
