@@ -2,12 +2,13 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kilizix AI</title>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <style>
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 20% 0,#191922,#07070a 42%);color:#f5f5f7}button,input,textarea,select{font:inherit}.layout{min-height:100vh;display:flex}.sidebar{width:270px;flex:none;background:#0b0b0fee;border-right:1px solid #ffffff12;padding:16px;display:flex;flex-direction:column;gap:9px}.brand{display:flex;gap:11px;align-items:center;padding:5px 4px 15px}.logo,.header-logo{display:grid;place-items:center;background:linear-gradient(135deg,#fff,#777);color:#08080a;font-weight:900}.logo{width:40px;height:40px;border-radius:13px}.brand b{font-size:18px}.muted,.sub{color:#8f8f99;font-size:12px}.sidebtn{width:100%;border:1px solid #ffffff12;background:#ffffff07;color:#fff;border-radius:13px;padding:11px 13px;text-align:left;cursor:pointer}.primary{background:#fff;color:#111;border-color:#fff;font-weight:800}.premium{margin-top:auto}.chats-title{color:#666;font-size:10px;text-transform:uppercase;padding:11px 5px 2px}.chat-list{overflow:auto;display:flex;flex-direction:column;gap:4px}.chat-item{border:0;background:transparent;color:#ddd;text-align:left;border-radius:9px;padding:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-item:hover,.chat-item.active{background:#ffffff0b}.main{width:min(1000px,100%);min-height:100vh;display:flex;flex-direction:column;padding:18px 24px;margin:auto}header{display:flex;align-items:center;gap:11px;padding:3px 3px 15px}.header-logo{width:43px;height:43px;border-radius:14px}.header-title h2{margin:0;font-size:21px}.status{margin-left:auto;font-size:12px;color:#999}.ready{color:#9cffb0}.loading{color:#ffd37a}.error{color:#ff9c9c}.account{display:flex;align-items:center;gap:7px;margin-left:12px}.account img{width:31px;height:31px;border-radius:50%;object-fit:cover}.account button{border:1px solid #ffffff12;background:#ffffff08;color:#fff;border-radius:10px;padding:7px 9px;cursor:pointer}.login{border:1px solid #ffffff18;background:#fff;color:#111;border-radius:11px;padding:9px 12px;font-weight:800;cursor:pointer;margin-left:10px}.chat{flex:1;border:1px solid #ffffff12;border-radius:25px;background:#ffffff05;backdrop-filter:blur(18px);padding:18px;overflow:auto;min-height:55vh}.msg{max-width:78%;padding:12px 15px;border-radius:17px;margin:9px 0;line-height:1.5;white-space:pre-wrap}.user{margin-left:auto;background:#f1f1f1;color:#111}.assistant{background:#17171c;border:1px solid #ffffff10}.system{max-width:100%;text-align:center;color:#bcb3bc;background:#171217;border:1px solid #ffffff0b;font-size:13px}.composer{display:flex;gap:9px;margin-top:12px}.composer input{flex:1;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:17px;padding:14px 16px;outline:0}.composer button{border:0;border-radius:17px;background:#fff;color:#111;padding:0 21px;font-weight:800;cursor:pointer}.composer button:disabled{opacity:.45}.note{text-align:center;color:#666;font-size:11px;margin-top:8px}.hidden{display:none!important}.page{display:flex;flex-direction:column;gap:13px;min-height:70vh}.page-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.page-head h2{margin:7px 0 2px}.badge{display:inline-block;background:#ffffff0b;border:1px solid #ffffff10;border-radius:999px;padding:4px 8px;color:#aaa;font-size:10px}.codex-prompt{width:100%;min-height:145px;background:#121217;color:#fff;border:1px solid #ffffff18;border-radius:19px;padding:15px;resize:vertical;outline:0}.action{border:0;border-radius:13px;padding:11px 15px;background:#fff;color:#111;font-weight:800;cursor:pointer}.result{border:1px solid #ffffff12;border-radius:19px;padding:10px;display:grid;grid-template-columns:220px 1fr;gap:10px}.files{display:flex;flex-direction:column;gap:3px;max-height:390px;overflow:auto}.file{border:0;background:transparent;color:#ddd;text-align:left;padding:8px;border-radius:8px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file.active,.file:hover{background:#ffffff0c}.editor textarea{width:100%;height:390px;background:#09090d;color:#ddd;border:1px solid #ffffff10;border-radius:13px;padding:12px;resize:none;font:12px/1.5 ui-monospace,monospace;outline:0}.bottom{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px}.plugin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:11px}.plugin{border:1px solid #ffffff12;background:#ffffff06;border-radius:18px;padding:15px;display:flex;flex-direction:column;gap:8px}.plugin h3{margin:0}.plugin p{margin:0;color:#999;font-size:13px;line-height:1.4}.plugin button{margin-top:auto}.ghbox{display:flex;flex-direction:column;gap:7px}.ghbox input,.ghbox select,.ghbox textarea{background:#0d0d12;color:#fff;border:1px solid #ffffff18;border-radius:9px;padding:8px}.ghbox textarea{min-height:150px;resize:vertical;font:12px/1.5 monospace}.menu{display:none;border:1px solid #ffffff12;background:#ffffff08;color:#fff;border-radius:10px;padding:7px 10px}@media(max-width:650px){.sidebar{position:fixed;z-index:20;top:0;bottom:0;left:0;transform:translateX(-100%);transition:.2s}.sidebar.open{transform:translateX(0)}.menu{display:block}.main{padding:11px}.status{display:none}.msg{max-width:92%}.result{grid-template-columns:1fr}.files{max-height:180px}.editor textarea{height:300px}}
 </style></head>
 <body><div class="layout">
 <aside class="sidebar" id="sidebar"><div class="brand"><div class="logo">K</div><div><b>Kilizix AI</b><div class="muted">Ваш AI-помощник</div></div></div><button class="sidebtn primary" id="newChat">＋ Новый чат</button><button class="sidebtn" id="codexBtn">⚡ Codex — создать проект</button><button class="sidebtn" id="pluginsBtn">🧩 Плагины</button><div class="chats-title">Твои чаты</div><div class="chat-list" id="chatList"></div><button class="sidebtn premium">✦ Kilizix.AI Premium<br><span class="muted">150 ₽ в год · без лимита</span></button></aside>
-<main class="main"><header><button class="menu" id="menu">☰</button><div class="header-logo">K</div><div class="header-title"><h2>Kilizix AI</h2><div class="sub">Локальный AI · WebGPU</div></div><div id="status" class="status loading">Запуск модели…</div><div id="account"></div></header>
+<main class="main"><header><button class="menu" id="menu">☰</button><div class="header-logo">K</div><div class="header-title"><h2>Kilizix AI</h2><div class="sub">Локальный AI · WebGPU</div></div><div id="status" class="status loading">Запуск модели…</div><div id="turnstileBox"></div></header>
 <section id="chat" class="chat"></section>
 <section id="codex" class="page hidden"><div class="page-head"><div><span class="badge">Kilizix Codex</span><h2>Создай что угодно</h2><div class="sub">Опиши проект — AI соберёт файлы.</div></div><button class="sidebtn" id="codexBack">← Чат</button></div><textarea id="codexPrompt" class="codex-prompt" placeholder="Например: создай сайт магазина с каталогом, корзиной и адаптивным дизайном"></textarea><div><button class="action" id="codexGenerate">⚡ Создать проект</button> <span id="codexStatus" class="status">Готов</span></div><div id="codexResult" class="result hidden"><div><div class="muted">Файлы проекта</div><div id="fileList" class="files"></div></div><div class="editor"><div id="fileTitle" class="muted">Файл</div><textarea id="fileContent"></textarea></div><div class="bottom"><button class="sidebtn" id="preview">▶ Предпросмотр</button><button class="action" id="download">⬇ Скачать ZIP</button></div></div></section>
 <section id="plugins" class="page hidden"><div class="page-head"><div><span class="badge">Kilizix Plugins</span><h2>Плагины</h2><div class="sub">Дополнительные возможности AI.</div></div><button class="sidebtn" id="pluginsBack">← Чат</button></div><div id="pluginGrid" class="plugin-grid"></div></section>
@@ -15,7 +16,7 @@
 <script type="module">
 import {CreateMLCEngine} from "https://esm.run/@mlc-ai/web-llm@0.2.85";
 const MODEL="Qwen2.5-0.5B-Instruct-q4f16_1-MLC",chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("input"),send=document.getElementById("send"),status=document.getElementById("status"),chatList=document.getElementById("chatList");
-let engine=null,messages=[],chatId=Date.now(),files=[],selected=0;
+let engine=null,messages=[],chatId=Date.now(),files=[],selected=0,captchaVerified=false,modelReady=false;
 const plugins=[{id:"calculator",icon:"🧮",name:"Калькулятор",desc:"Точные вычисления."},{id:"writer",icon:"✍️",name:"Писатель",desc:"Письма, посты и документы."},{id:"translator",icon:"🌐",name:"Переводчик",desc:"Естественный перевод."},{id:"developer",icon:"💻",name:"Developer",desc:"Программирование и отладка."},{id:"research",icon:"🔎",name:"Research",desc:"Глубокий анализ."},{id:"github",icon:"🐙",name:"GitHub",desc:"Репозитории, чтение и запись файлов."}];
 function pget(){try{return JSON.parse(localStorage.getItem("kilizix_plugins")||"[]")}catch{return[]}}function pset(x){localStorage.setItem("kilizix_plugins",JSON.stringify(x))}function enabled(id){return pget().includes(id)}
 function add(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
@@ -25,7 +26,55 @@ function renderChats(){chatList.innerHTML="";chats().reverse().forEach(c=>{const
 function openChat(id){const c=chats().find(x=>x.id===id);if(!c)return;chatId=c.id;messages=c.messages||[];chat.innerHTML="";messages.forEach(x=>add(x.role,x.content));renderChats()}
 function newChat(){save();chatId=Date.now();messages=[];chat.innerHTML="";add("assistant","Новый чат создан. Чем могу помочь?");renderChats();input.focus()}
 function context(){const x=pget();return x.length?"\nАктивные плагины: "+x.join(", "):""}
-async function renderAuth(){const box=document.getElementById("account");try{const s=await (await fetch("/api/auth/status")).json();box.innerHTML="";if(s.authenticated&&s.user){const u=s.user,w=document.createElement("div");w.className="account";if(u.picture){const img=document.createElement("img");img.src=u.picture;w.appendChild(img)}const n=document.createElement("span");n.textContent=u.name;w.appendChild(n);const out=document.createElement("button");out.textContent="Выйти";out.onclick=async()=>{await fetch("/api/auth/logout",{method:"POST"});renderAuth()};w.appendChild(out);box.appendChild(w)}else{const b=document.createElement("button");b.className="login";b.textContent="Войти через Google";b.onclick=()=>location.href="/api/auth/google";box.appendChild(b)}}catch{}}
+function updateReady(){
+  const ready=modelReady&&captchaVerified;
+  input.disabled=!ready;
+  send.disabled=!ready;
+  if(ready) input.focus();
+}
+async function renderTurnstile(){
+  const box=document.getElementById("turnstileBox");
+  try{
+    const s=await (await fetch("/api/auth/status")).json();
+    if(s.authenticated){
+      captchaVerified=true;
+      box.innerHTML="<span class='badge'>✓ CAPTCHA пройдена</span>";
+      updateReady();
+      return;
+    }
+    const cfg=await (await fetch("/api/turnstile/config")).json();
+    if(!cfg.sitekey){
+      box.innerHTML="<span class='status error'>CAPTCHA не настроена</span>";
+      return;
+    }
+    const render=()=>{
+      if(!window.turnstile)return setTimeout(render,200);
+      box.innerHTML="";
+      window.turnstile.render(box,{
+        sitekey:cfg.sitekey,
+        theme:"dark",
+        size:"compact",
+        callback:async token=>{
+          const r=await fetch("/api/turnstile/verify",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({token})
+          });
+          const j=await r.json();
+          if(!r.ok){box.innerHTML="<span class='status error'>CAPTCHA не пройдена</span>";return}
+          captchaVerified=true;
+          box.innerHTML="<span class='badge'>✓ CAPTCHA пройдена</span>";
+          updateReady();
+        },
+        "error-callback":()=>{box.innerHTML="<span class='status error'>Ошибка CAPTCHA</span>";},
+        "expired-callback":()=>{captchaVerified=false;updateReady();render();}
+      });
+    };
+    render();
+  }catch{
+    box.innerHTML="<span class='status error'>Ошибка CAPTCHA</span>";
+  }
+}
 document.getElementById("newChat").onclick=newChat;document.getElementById("menu").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
 function show(section){["chat","codex","plugins"].forEach(id=>document.getElementById(id).classList.toggle("hidden",id!==section));document.getElementById("sidebar").classList.remove("open")}
 document.getElementById("codexBtn").onclick=()=>show("codex");document.getElementById("codexBack").onclick=()=>show("chat");document.getElementById("pluginsBtn").onclick=()=>{show("plugins");renderPlugins()};document.getElementById("pluginsBack").onclick=()=>show("chat");
@@ -36,6 +85,6 @@ async function codexGenerate(){const prompt=document.getElementById("codexPrompt
 function renderFiles(){const list=document.getElementById("fileList");list.innerHTML="";files.forEach((f,i)=>{const b=document.createElement("button");b.className="file"+(i===selected?" active":"");b.textContent=f.path;b.onclick=()=>{selected=i;renderFiles()};list.appendChild(b)});if(files[selected]){document.getElementById("fileTitle").textContent=files[selected].path;document.getElementById("fileContent").value=files[selected].content}}
 document.getElementById("codexGenerate").onclick=codexGenerate;document.getElementById("fileContent").oninput=e=>{if(files[selected])files[selected].content=e.target.value};document.getElementById("preview").onclick=()=>{const f=files.find(x=>x.path.toLowerCase()==="index.html");if(!f)return alert("Нет index.html");const w=window.open("about:blank","_blank");if(w)w.document.write(f.content)};document.getElementById("download").onclick=async()=>{if(!window.JSZip){const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";document.head.appendChild(s);await new Promise(r=>s.onload=r)}const z=new JSZip();files.forEach(f=>z.file(f.path,f.content));const b=await z.generateAsync({type:"blob"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="kilizix-project.zip";a.click()};
 form.onsubmit=async e=>{e.preventDefault();const text=input.value.trim();if(!text||!engine)return;messages.push({role:"user",content:text});add("user",text);input.value="";send.disabled=true;try{const r=await engine.chat.completions.create({messages:[{role:"system",content:"Ты Kilizix AI — полезный ИИ-помощник. Отвечай на русском, если пользователь пишет по-русски."+context()},...messages.slice(-12)],temperature:.7,max_tokens:700});const reply=r.choices?.[0]?.message?.content||"Не удалось получить ответ.";messages.push({role:"assistant",content:reply});add("assistant",reply);save()}catch(e){add("assistant","Ошибка AI: "+e.message)}finally{send.disabled=false;input.focus()}};
-async function init(){renderChats();renderAuth();add("assistant","Запускаю локальную модель…");try{if(!navigator.gpu)throw Error("WebGPU недоступен. Обновите Chrome/Edge и включите аппаратное ускорение.");engine=await CreateMLCEngine(MODEL,{initProgressCallback:p=>{status.textContent=p.text||"Загрузка модели…";status.className="status loading"}});status.textContent="● Готов";status.className="status ready";input.disabled=false;send.disabled=false;input.focus();chat.innerHTML="";add("assistant","Готово. Я работаю прямо в браузере без платного API.")}catch(e){status.textContent="Ошибка AI";status.className="status error";input.disabled=true;send.disabled=true;chat.innerHTML="";add("system","Не удалось запустить AI.\n\n"+e.message+"\n\nПроверьте WebGPU в Chrome/Edge и перезагрузите страницу.")}}
+async function init(){renderChats();renderTurnstile();add("assistant","Запускаю локальную модель…");try{if(!navigator.gpu)throw Error("WebGPU недоступен. Обновите Chrome/Edge и включите аппаратное ускорение.");engine=await CreateMLCEngine(MODEL,{initProgressCallback:p=>{status.textContent=p.text||"Загрузка модели…";status.className="status loading"}});status.textContent="● Готов";status.className="status ready";modelReady=true;updateReady();chat.innerHTML="";add("assistant","Готово. Я работаю прямо в браузере без платного API.")}catch(e){status.textContent="Ошибка AI";status.className="status error";input.disabled=true;send.disabled=true;chat.innerHTML="";add("system","Не удалось запустить AI.\n\n"+e.message+"\n\nПроверьте WebGPU в Chrome/Edge и перезагрузите страницу.")}}
 init();
 </script></body></html>
