@@ -41,13 +41,14 @@ h2{font-size:22px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:3px
 @media(max-width:760px){.sidebar{width:220px}.main{padding:12px}.chat{min-height:58vh}}
 @media(max-width:620px){.sidebar{position:fixed;z-index:5;left:0;top:0;bottom:0;transform:translateX(-100%);transition:.25s;width:270px}.sidebar.open{transform:translateX(0)}.menu-toggle{display:block!important}.main{width:100%}.msg{max-width:90%}.status{display:none}}
 .menu-toggle{display:none;border:1px solid var(--line);background:#ffffff08;color:#fff;border-radius:12px;padding:8px 11px;cursor:pointer}
-</style>
+.codex{display:flex;flex-direction:column;gap:14px;min-height:70vh}.hidden{display:none!important}.codex-head{display:flex;align-items:center;justify-content:space-between;gap:14px}.codex-head h2{margin:8px 0 3px}.codex-prompt{width:100%;min-height:150px;resize:vertical;background:#121217;border:1px solid #ffffff18;color:#fff;border-radius:20px;padding:16px;outline:none;font:inherit;line-height:1.5}.codex-prompt:focus{border-color:#ffffff38}.codex-actions,.codex-bottom{display:flex;align-items:center;gap:10px}.codex-generate{border:0;border-radius:15px;padding:12px 17px;background:#fff;color:#111;font-weight:800;cursor:pointer}.codex-result{display:grid;grid-template-columns:230px 1fr;gap:10px;border:1px solid var(--line);border-radius:20px;background:#ffffff05;padding:10px}.codex-files,.codex-editor{min-width:0}.codex-title{font-size:12px;color:#999;padding:7px 8px;text-transform:uppercase;letter-spacing:.07em}#codexFileList{display:flex;flex-direction:column;gap:3px;max-height:410px;overflow:auto}.codex-file{border:0;background:transparent;color:#ddd;text-align:left;border-radius:9px;padding:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.codex-file:hover,.codex-file.active{background:#ffffff0d}#codexFileContent{width:100%;height:410px;resize:none;background:#09090d;color:#ddd;border:1px solid #ffffff10;border-radius:14px;padding:14px;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}.codex-bottom{grid-column:1/-1;justify-content:flex-end}@media(max-width:700px){.codex-result{grid-template-columns:1fr}.codex-files{order:2}.codex-editor{order:1}.codex-bottom{order:3}}</style>
 </head>
 <body>
 <div class="layout">
 <aside class="sidebar" id="sidebar">
   <div class="brand"><div class="logo">K</div><div><b>Kilizix AI</b><div>Ваш AI-помощник</div></div></div>
   <button class="sidebtn primary" id="newChat">＋ Новый чат</button>
+  <button class="sidebtn" id="codexBtn">⚡ Codex — создать проект</button>
   <div class="chats-title">Твои чаты</div>
   <div class="chat-list" id="chatList"></div>
   <button class="sidebtn premium" id="premiumBtn"><b>✦ Kilizix.AI Premium</b><span>150 ₽ в год · без лимита</span></button>
@@ -61,7 +62,12 @@ h2{font-size:22px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:3px
   <div><h2>Kilizix AI</h2><div class="sub">Локальный AI без платного API</div></div>
   <div id="status" class="status">Загрузка модели…</div>
 </header>
-<main class="chat" id="chat"><div class="msg assistant">Привет! Я Kilizix AI. Сейчас загружаю модель прямо в ваш браузер.</div></main>
+<section class="codex hidden" id="codex">
+<div class="codex-head"><div><span class="badge">Kilizix Codex</span><h2>Создай что угодно</h2><div class="sub">Опиши результат обычными словами — Codex соберёт структуру проекта и файлы.</div></div><button class="sidebtn" id="codexBack">← Чат</button></div>
+<textarea id="codexPrompt" class="codex-prompt" placeholder="Например: создай современный сайт интернет-магазина с главной страницей, каталогом, корзиной и адаптивным дизайном..."></textarea>
+<div class="codex-actions"><button class="codex-generate" id="codexGenerate">⚡ Создать проект</button><span id="codexStatus" class="status">Готов</span></div>
+<div id="codexResult" class="codex-result hidden"><div class="codex-files"><div class="codex-title">Файлы проекта</div><div id="codexFileList"></div></div><div class="codex-editor"><div class="codex-title" id="codexFileTitle">Выберите файл</div><textarea id="codexFileContent" spellcheck="false"></textarea></div><div class="codex-bottom"><button class="codex-generate" id="codexDownload">⬇ Скачать ZIP</button><button class="sidebtn" id="codexPreview">▶ Предпросмотр</button></div></div>
+</section>
 <form class="composer" id="form"><input id="input" autocomplete="off" placeholder="Напишите сообщение..." disabled><button id="send" disabled>➤</button></form>
 <div class="note" id="note">Модель работает на устройстве пользователя. Интернет нужен только для первой загрузки модели.</div>
 </main>
@@ -187,6 +193,21 @@ document.getElementById("premiumBtn").onclick=openPremium;
 document.getElementById("trialBtn").onclick=openTrial;
 document.getElementById("menuToggle").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
 
+const codexBtn=document.getElementById("codexBtn"),codex=document.getElementById("codex"),codexBack=document.getElementById("codexBack");
+const codexPrompt=document.getElementById("codexPrompt"),codexGenerate=document.getElementById("codexGenerate"),codexStatus=document.getElementById("codexStatus");
+const codexResult=document.getElementById("codexResult"),codexFileList=document.getElementById("codexFileList"),codexFileTitle=document.getElementById("codexFileTitle"),codexFileContent=document.getElementById("codexFileContent");
+let codexFiles=[],codexSelected=0;
+function openCodex(){document.querySelector(".chat").classList.add("hidden");form.classList.add("hidden");note.classList.add("hidden");codex.classList.remove("hidden");document.getElementById("sidebar").classList.remove("open");codexPrompt.focus()}
+function closeCodex(){codex.classList.add("hidden");document.querySelector(".chat").classList.remove("hidden");form.classList.remove("hidden");note.classList.remove("hidden")}
+codexBtn.onclick=openCodex;codexBack.onclick=closeCodex;
+function selectCodexFile(i){codexSelected=i;const f=codexFiles[i];if(!f)return;codexFileTitle.textContent=f.path;codexFileContent.value=f.content;document.querySelectorAll(".codex-file").forEach((b,n)=>b.classList.toggle("active",n===i))}
+function renderCodexFiles(){codexFileList.innerHTML="";codexFiles.forEach((f,i)=>{const b=document.createElement("button");b.className="codex-file"+(i===codexSelected?" active":"");b.textContent=f.path;b.onclick=()=>selectCodexFile(i);codexFileList.appendChild(b)});if(codexFiles.length)selectCodexFile(codexSelected)}
+function parseCodex(text){try{const clean=text.replace(/^```(?:json)?/i,"").replace(/```$/,"").trim();const obj=JSON.parse(clean);if(Array.isArray(obj.files))return obj.files.filter(x=>x&&x.path).map(x=>({path:String(x.path),content:String(x.content??"")}))}catch{}const out=[];const re=/(?:^|\n)(?:FILE|ФАЙЛ)\s*:\s*([^\n]+)\n([\s\S]*?)(?=(?:\n(?:FILE|ФАЙЛ)\s*:)|$)/gi;let m;while((m=re.exec(text)))out.push({path:m[1].trim(),content:m[2].trim()});return out}
+async function generateCodex(){const prompt=codexPrompt.value.trim();if(!prompt||!engine){codexStatus.textContent="Модель ещё не готова";return}codexStatus.textContent="Создаю проект…";codexGenerate.disabled=true;const instruction="Ты Kilizix Codex — автономный генератор программных проектов. Пользователь хочет: "+prompt+"\nСгенерируй рабочий проект, а не объяснение. Верни ТОЛЬКО валидный JSON без markdown: {\"project_name\":\"название\",\"files\":[{\"path\":\"index.html\",\"content\":\"...\"}]}. Создавай все важные файлы проекта. Не включай бинарные файлы, секреты, API-ключи и node_modules. Пути относительные. Для сайта обязательно index.html и CSS/JS при необходимости.";try{const res=await engine.chat.completions.create({messages:[{role:"system",content:instruction}],temperature:.2,max_tokens:4096});const raw=res.choices?.[0]?.message?.content||"";codexFiles=parseCodex(raw);if(!codexFiles.length)throw new Error("Модель не вернула структуру файлов. Опиши проект подробнее.");codexSelected=0;codexResult.classList.remove("hidden");renderCodexFiles();codexStatus.textContent="Готово · "+codexFiles.length+" файлов"}catch(e){codexStatus.textContent="Ошибка";alert("Codex: "+e.message)}finally{codexGenerate.disabled=false}}
+codexGenerate.onclick=generateCodex;codexPrompt.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")generateCodex()});
+codexFileContent.addEventListener("input",()=>{if(codexFiles[codexSelected])codexFiles[codexSelected].content=codexFileContent.value});
+document.getElementById("codexDownload").onclick=async()=>{if(!codexFiles.length)return;if(!window.JSZip){const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";document.head.appendChild(sc);await new Promise(r=>sc.onload=r)}const zip=new JSZip();codexFiles.forEach(f=>zip.file(f.path,f.content));const blob=await zip.generateAsync({type:"blob"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="kilizix-project.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+document.getElementById("codexPreview").onclick=()=>{const f=codexFiles.find(x=>x.path.toLowerCase()==="index.html"||x.path.toLowerCase().endsWith("/index.html"));if(!f){alert("В проекте нет index.html для предпросмотра.");return}const w=window.open("about:blank","_blank");if(w)w.document.write(f.content)};
 form.addEventListener("submit",async e=>{
  e.preventDefault();const text=input.value.trim();if(!text||!engine||!canSend())return;
  consume();messages.push({role:"user",content:text});add("user",text);input.value="";send.disabled=true;updateStatus();
